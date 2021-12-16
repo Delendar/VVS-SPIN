@@ -111,9 +111,11 @@ De la misma forma se pueden analizar los apartados del ejercicio A. Como verific
  2. El barbero esta `durmiendo` mientras hay clientes que se marchan sin ser `atendidos`. Que son los que no llegan a entrar en la sala de espera ya que esta llena con el cliente al que no atiende el barbero.
 ## TODO
  - Naive approach:
-   - Razones del deadlock
-   - Razones del erroneo funcionamiento. (Un poco mas en detalle el porque se ejecutan al mismo tiempo?)
+   - Mostrar contraejemplos?
    - Pasa para cualquier N>=0 sitios en la sala de espera?
+ - Classical solution:
+   - Exercise B
+   - Exercise C
 
 ## Comandos
 Compilar Spin:
