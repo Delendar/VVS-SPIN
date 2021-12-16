@@ -19,72 +19,13 @@
 		if (trpt->o_pm&1) continue;
 		_m = 3; goto P999;
 
-		 /* CLAIM never_0 */
-	case 3: // STATE 1 - exercise_a.pml.nvr:5 - [(((Barber._p==sleeping)&&(Customer._p==waiting)))] (6:0:0 - 1)
-		
-#if defined(VERI) && !defined(NP)
-#if NCLAIMS>1
-		{	static int reported1 = 0;
-			if (verbose && !reported1)
-			{	int nn = (int) ((Pclaim *)pptr(0))->_n;
-				printf("depth %ld: Claim %s (%d), state %d (line %d)\n",
-					depth, procname[spin_c_typ[nn]], nn, (int) ((Pclaim *)pptr(0))->_p, src_claim[ (int) ((Pclaim *)pptr(0))->_p ]);
-				reported1 = 1;
-				fflush(stdout);
-		}	}
-#else
-		{	static int reported1 = 0;
-			if (verbose && !reported1)
-			{	printf("depth %d: Claim, state %d (line %d)\n",
-					(int) depth, (int) ((Pclaim *)pptr(0))->_p, src_claim[ (int) ((Pclaim *)pptr(0))->_p ]);
-				reported1 = 1;
-				fflush(stdout);
-		}	}
-#endif
-#endif
-		reached[2][1] = 1;
-		if (!(((((int)((P0 *)Pptr(f_pid(0)))->_p)==10)&&(((int)((P1 *)Pptr(f_pid(1)))->_p)==5))))
-			continue;
-		/* merge: assert(!(((Barber._p==sleeping)&&(Customer._p==waiting))))(0, 2, 6) */
-		reached[2][2] = 1;
-		spin_assert( !(((((int)((P0 *)Pptr(f_pid(0)))->_p)==10)&&(((int)((P1 *)Pptr(f_pid(1)))->_p)==5))), " !(((Barber._p==sleeping)&&(Customer._p==waiting)))", II, tt, t);
-		/* merge: .(goto)(0, 7, 6) */
-		reached[2][7] = 1;
-		;
-		_m = 3; goto P999; /* 2 */
-	case 4: // STATE 10 - exercise_a.pml.nvr:10 - [-end-] (0:0:0 - 1)
-		
-#if defined(VERI) && !defined(NP)
-#if NCLAIMS>1
-		{	static int reported10 = 0;
-			if (verbose && !reported10)
-			{	int nn = (int) ((Pclaim *)pptr(0))->_n;
-				printf("depth %ld: Claim %s (%d), state %d (line %d)\n",
-					depth, procname[spin_c_typ[nn]], nn, (int) ((Pclaim *)pptr(0))->_p, src_claim[ (int) ((Pclaim *)pptr(0))->_p ]);
-				reported10 = 1;
-				fflush(stdout);
-		}	}
-#else
-		{	static int reported10 = 0;
-			if (verbose && !reported10)
-			{	printf("depth %d: Claim, state %d (line %d)\n",
-					(int) depth, (int) ((Pclaim *)pptr(0))->_p, src_claim[ (int) ((Pclaim *)pptr(0))->_p ]);
-				reported10 = 1;
-				fflush(stdout);
-		}	}
-#endif
-#endif
-		reached[2][10] = 1;
-		if (!delproc(1, II)) continue;
-		_m = 3; goto P999; /* 0 */
-
 		 /* PROC Customer */
-	case 5: // STATE 1 - exercise_a.pml:32 - [printf('%d arrives\\n',_pid)] (0:0:0 - 1)
+	case 3: // STATE 1 - exercise_a.pml:32 - [printf('%d arrives\\n',_pid)] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][1] = 1;
 		Printf("%d arrives\n", ((int)((P1 *)_this)->_pid));
 		_m = 3; goto P999; /* 0 */
-	case 6: // STATE 2 - exercise_a.pml:33 - [shaved[_pid] = unattended] (0:0:1 - 1)
+	case 4: // STATE 2 - exercise_a.pml:33 - [shaved[_pid] = unattended] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][2] = 1;
 		(trpt+1)->bup.oval = now.shaved[ Index(((int)((P1 *)_this)->_pid), 5) ];
@@ -94,13 +35,13 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 7: // STATE 3 - exercise_a.pml:36 - [((sitting==0))] (0:0:0 - 1)
+	case 5: // STATE 3 - exercise_a.pml:36 - [((sitting==0))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][3] = 1;
 		if (!((((int)now.sitting)==0)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 8: // STATE 4 - exercise_a.pml:36 - [sitting = _pid] (0:0:1 - 1)
+	case 6: // STATE 4 - exercise_a.pml:36 - [sitting = _pid] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][4] = 1;
 		(trpt+1)->bup.oval = ((int)now.sitting);
@@ -110,19 +51,19 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 9: // STATE 5 - exercise_a.pml:37 - [((shaved[_pid]==done))] (0:0:0 - 1)
+	case 7: // STATE 5 - exercise_a.pml:37 - [((shaved[_pid]==done))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][5] = 1;
 		if (!((now.shaved[ Index(((int)((P1 *)_this)->_pid), 5) ]==2)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 10: // STATE 6 - exercise_a.pml:40 - [(((sitting!=0)&&(customers<1)))] (0:0:0 - 1)
+	case 8: // STATE 6 - exercise_a.pml:40 - [(((sitting!=0)&&(customers<1)))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][6] = 1;
 		if (!(((((int)now.sitting)!=0)&&(((int)now.customers)<1))))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 11: // STATE 7 - exercise_a.pml:41 - [queue[end] = _pid] (0:0:1 - 1)
+	case 9: // STATE 7 - exercise_a.pml:41 - [queue[end] = _pid] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][7] = 1;
 		(trpt+1)->bup.oval = ((int)now.queue[ Index(((int)now.end), 1) ]);
@@ -132,7 +73,7 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 12: // STATE 8 - exercise_a.pml:42 - [end = ((end+1)%1)] (0:0:1 - 1)
+	case 10: // STATE 8 - exercise_a.pml:42 - [end = ((end+1)%1)] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][8] = 1;
 		(trpt+1)->bup.oval = ((int)now.end);
@@ -142,7 +83,7 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 13: // STATE 9 - exercise_a.pml:43 - [customers = (customers+1)] (0:0:1 - 1)
+	case 11: // STATE 9 - exercise_a.pml:43 - [customers = (customers+1)] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][9] = 1;
 		(trpt+1)->bup.oval = ((int)now.customers);
@@ -152,42 +93,42 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 14: // STATE 10 - exercise_a.pml:44 - [((shaved[_pid]==done))] (0:0:0 - 1)
+	case 12: // STATE 10 - exercise_a.pml:44 - [((shaved[_pid]==done))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][10] = 1;
 		if (!((now.shaved[ Index(((int)((P1 *)_this)->_pid), 5) ]==2)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 15: // STATE 11 - exercise_a.pml:45 - [(((sitting!=0)&&(customers==1)))] (0:0:0 - 1)
+	case 13: // STATE 11 - exercise_a.pml:45 - [(((sitting!=0)&&(customers==1)))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][11] = 1;
 		if (!(((((int)now.sitting)!=0)&&(((int)now.customers)==1))))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 16: // STATE 15 - exercise_a.pml:48 - [printf('%d left %e\\n',_pid,shaved[_pid])] (0:0:0 - 4)
+	case 14: // STATE 15 - exercise_a.pml:48 - [printf('%d left %e\\n',_pid,shaved[_pid])] (0:0:0 - 4)
 		IfNotBlocked
 		reached[1][15] = 1;
 		Printf("%d left %e\n", ((int)((P1 *)_this)->_pid), now.shaved[ Index(((int)((P1 *)_this)->_pid), 5) ]);
 		_m = 3; goto P999; /* 0 */
-	case 17: // STATE 19 - exercise_a.pml:50 - [-end-] (0:0:0 - 1)
+	case 15: // STATE 19 - exercise_a.pml:50 - [-end-] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][19] = 1;
 		if (!delproc(1, II)) continue;
 		_m = 3; goto P999; /* 0 */
 
 		 /* PROC Barber */
-	case 18: // STATE 1 - exercise_a.pml:16 - [((sitting!=0))] (0:0:0 - 1)
+	case 16: // STATE 1 - exercise_a.pml:16 - [((sitting!=0))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[0][1] = 1;
 		if (!((((int)now.sitting)!=0)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 19: // STATE 2 - exercise_a.pml:17 - [printf('%d is being shaved\\n',sitting)] (0:0:0 - 1)
+	case 17: // STATE 2 - exercise_a.pml:17 - [printf('%d is being shaved\\n',sitting)] (0:0:0 - 1)
 		IfNotBlocked
 		reached[0][2] = 1;
 		Printf("%d is being shaved\n", ((int)now.sitting));
 		_m = 3; goto P999; /* 0 */
-	case 20: // STATE 3 - exercise_a.pml:18 - [shaved[sitting] = done] (0:0:1 - 1)
+	case 18: // STATE 3 - exercise_a.pml:18 - [shaved[sitting] = done] (0:0:1 - 1)
 		IfNotBlocked
 		reached[0][3] = 1;
 		(trpt+1)->bup.oval = now.shaved[ Index(((int)now.sitting), 5) ];
@@ -197,13 +138,13 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 21: // STATE 4 - exercise_a.pml:20 - [((customers>0))] (0:0:0 - 1)
+	case 19: // STATE 4 - exercise_a.pml:20 - [((customers>0))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[0][4] = 1;
 		if (!((((int)now.customers)>0)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 22: // STATE 5 - exercise_a.pml:20 - [sitting = queue[start]] (0:0:1 - 1)
+	case 20: // STATE 5 - exercise_a.pml:20 - [sitting = queue[start]] (0:0:1 - 1)
 		IfNotBlocked
 		reached[0][5] = 1;
 		(trpt+1)->bup.oval = ((int)now.sitting);
@@ -213,7 +154,7 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 23: // STATE 6 - exercise_a.pml:21 - [start = ((start+1)%1)] (0:0:1 - 1)
+	case 21: // STATE 6 - exercise_a.pml:21 - [start = ((start+1)%1)] (0:0:1 - 1)
 		IfNotBlocked
 		reached[0][6] = 1;
 		(trpt+1)->bup.oval = ((int)now.start);
@@ -223,7 +164,7 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 24: // STATE 7 - exercise_a.pml:22 - [customers = (customers-1)] (0:0:1 - 1)
+	case 22: // STATE 7 - exercise_a.pml:22 - [customers = (customers-1)] (0:0:1 - 1)
 		IfNotBlocked
 		reached[0][7] = 1;
 		(trpt+1)->bup.oval = ((int)now.customers);
@@ -233,13 +174,13 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 25: // STATE 8 - exercise_a.pml:24 - [((customers==0))] (0:0:0 - 1)
+	case 23: // STATE 8 - exercise_a.pml:24 - [((customers==0))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[0][8] = 1;
 		if (!((((int)now.customers)==0)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 26: // STATE 9 - exercise_a.pml:24 - [sitting = 0] (0:0:1 - 1)
+	case 24: // STATE 9 - exercise_a.pml:24 - [sitting = 0] (0:0:1 - 1)
 		IfNotBlocked
 		reached[0][9] = 1;
 		(trpt+1)->bup.oval = ((int)now.sitting);
@@ -249,12 +190,12 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 27: // STATE 10 - exercise_a.pml:25 - [printf('Barber sleeping\\n')] (0:0:0 - 1)
+	case 25: // STATE 10 - exercise_a.pml:25 - [printf('Barber sleeping\\n')] (0:0:0 - 1)
 		IfNotBlocked
 		reached[0][10] = 1;
 		Printf("Barber sleeping\n");
 		_m = 3; goto P999; /* 0 */
-	case 28: // STATE 16 - exercise_a.pml:28 - [-end-] (0:0:0 - 1)
+	case 26: // STATE 16 - exercise_a.pml:28 - [-end-] (0:0:0 - 1)
 		IfNotBlocked
 		reached[0][16] = 1;
 		if (!delproc(1, II)) continue;

@@ -22,26 +22,7 @@ settable(void)
 {	Trans *T;
 	Trans *settr(int, int, int, int, int, char *, int, int, int);
 
-	trans = (Trans ***) emalloc(4*sizeof(Trans **));
-
-	/* proctype 2: never_0 */
-
-	trans[2] = (Trans **) emalloc(11*sizeof(Trans *));
-
-	trans[2][7]	= settr(41,0,6,1,0,".(goto)", 0, 2, 0);
-	T = trans[2][6] = settr(40,0,0,0,0,"DO", 0, 2, 0);
-	T = T->nxt	= settr(40,0,3,0,0,"DO", 0, 2, 0);
-	    T->nxt	= settr(40,0,4,0,0,"DO", 0, 2, 0);
-	T = trans[ 2][3] = settr(37,2,0,0,0,"ATOMIC", 1, 2, 0);
-	T->nxt	= settr(37,2,1,0,0,"ATOMIC", 1, 2, 0);
-	trans[2][1]	= settr(35,0,6,3,3,"(((Barber._p==sleeping)&&(Customer._p==waiting)))", 1, 2, 0); /* m: 2 -> 6,0 */
-	reached2[2] = 1;
-	trans[2][2]	= settr(0,0,0,0,0,"assert(!(((Barber._p==sleeping)&&(Customer._p==waiting))))",0,0,0);
-	trans[2][4]	= settr(38,0,6,1,0,"(1)", 0, 2, 0);
-	trans[2][5]	= settr(39,0,6,1,0,"goto T0_init", 0, 2, 0);
-	trans[2][8]	= settr(42,0,9,1,0,"break", 0, 2, 0);
-	trans[2][9]	= settr(43,0,10,1,0,"(1)", 0, 2, 0);
-	trans[2][10]	= settr(44,0,0,4,4,"-end-", 0, 3500, 0);
+	trans = (Trans ***) emalloc(3*sizeof(Trans **));
 
 	/* proctype 1: Customer */
 
@@ -50,26 +31,26 @@ settable(void)
 	trans[1][17]	= settr(32,0,16,1,0,".(goto)", 0, 2, 0);
 	T = trans[1][16] = settr(31,0,0,0,0,"DO", 0, 2, 0);
 	    T->nxt	= settr(31,0,1,0,0,"DO", 0, 2, 0);
-	trans[1][1]	= settr(16,0,2,5,0,"printf('%d arrives\\n',_pid)", 0, 2, 0);
-	trans[1][2]	= settr(17,0,13,6,6,"shaved[_pid] = unattended", 1, 2, 0);
+	trans[1][1]	= settr(16,0,2,3,0,"printf('%d arrives\\n',_pid)", 0, 2, 0);
+	trans[1][2]	= settr(17,0,13,4,4,"shaved[_pid] = unattended", 1, 2, 0);
 	T = trans[1][13] = settr(28,0,0,0,0,"IF", 0, 2, 0);
 	T = T->nxt	= settr(28,0,3,0,0,"IF", 0, 2, 0);
 	T = T->nxt	= settr(28,0,6,0,0,"IF", 0, 2, 0);
 	    T->nxt	= settr(28,0,11,0,0,"IF", 0, 2, 0);
-	trans[1][3]	= settr(18,0,4,7,0,"((sitting==0))", 1, 2, 0);
-	trans[1][4]	= settr(19,0,5,8,8,"sitting = _pid", 1, 2, 0);
-	trans[1][5]	= settr(20,0,15,9,0,"((shaved[_pid]==done))", 1, 2, 0);
+	trans[1][3]	= settr(18,0,4,5,0,"((sitting==0))", 1, 2, 0);
+	trans[1][4]	= settr(19,0,5,6,6,"sitting = _pid", 1, 2, 0);
+	trans[1][5]	= settr(20,0,15,7,0,"((shaved[_pid]==done))", 1, 2, 0);
 	trans[1][14]	= settr(29,0,15,1,0,".(goto)", 0, 2, 0);
-	trans[1][6]	= settr(21,0,7,10,0,"(((sitting!=0)&&(customers<1)))", 1, 2, 0);
-	trans[1][7]	= settr(22,0,8,11,11,"queue[end] = _pid", 1, 2, 0);
-	trans[1][8]	= settr(23,0,9,12,12,"end = ((end+1)%1)", 1, 2, 0);
-	trans[1][9]	= settr(24,0,10,13,13,"customers = (customers+1)", 1, 2, 0);
-	trans[1][10]	= settr(25,0,15,14,0,"((shaved[_pid]==done))", 1, 2, 0);
-	trans[1][11]	= settr(26,0,12,15,0,"(((sitting!=0)&&(customers==1)))", 1, 2, 0);
+	trans[1][6]	= settr(21,0,7,8,0,"(((sitting!=0)&&(customers<1)))", 1, 2, 0);
+	trans[1][7]	= settr(22,0,8,9,9,"queue[end] = _pid", 1, 2, 0);
+	trans[1][8]	= settr(23,0,9,10,10,"end = ((end+1)%1)", 1, 2, 0);
+	trans[1][9]	= settr(24,0,10,11,11,"customers = (customers+1)", 1, 2, 0);
+	trans[1][10]	= settr(25,0,15,12,0,"((shaved[_pid]==done))", 1, 2, 0);
+	trans[1][11]	= settr(26,0,12,13,0,"(((sitting!=0)&&(customers==1)))", 1, 2, 0);
 	trans[1][12]	= settr(27,0,15,1,0,"(1)", 0, 2, 0);
-	trans[1][15]	= settr(30,0,16,16,0,"printf('%d left %e\\n',_pid,shaved[_pid])", 1, 2, 0);
+	trans[1][15]	= settr(30,0,16,14,0,"printf('%d left %e\\n',_pid,shaved[_pid])", 1, 2, 0);
 	trans[1][18]	= settr(33,0,19,1,0,"break", 0, 2, 0);
-	trans[1][19]	= settr(34,0,0,17,17,"-end-", 0, 3500, 0);
+	trans[1][19]	= settr(34,0,0,15,15,"-end-", 0, 3500, 0);
 
 	/* proctype 0: Barber */
 
@@ -78,22 +59,22 @@ settable(void)
 	trans[0][14]	= settr(13,0,13,1,0,".(goto)", 0, 2, 0);
 	T = trans[0][13] = settr(12,0,0,0,0,"DO", 0, 2, 0);
 	    T->nxt	= settr(12,0,1,0,0,"DO", 0, 2, 0);
-	trans[0][1]	= settr(0,0,2,18,0,"((sitting!=0))", 1, 2, 0);
-	trans[0][2]	= settr(1,0,3,19,0,"printf('%d is being shaved\\n',sitting)", 1, 2, 0);
-	trans[0][3]	= settr(2,0,11,20,20,"shaved[sitting] = done", 1, 2, 0);
+	trans[0][1]	= settr(0,0,2,16,0,"((sitting!=0))", 1, 2, 0);
+	trans[0][2]	= settr(1,0,3,17,0,"printf('%d is being shaved\\n',sitting)", 1, 2, 0);
+	trans[0][3]	= settr(2,0,11,18,18,"shaved[sitting] = done", 1, 2, 0);
 	T = trans[0][11] = settr(10,0,0,0,0,"IF", 0, 2, 0);
 	T = T->nxt	= settr(10,0,4,0,0,"IF", 0, 2, 0);
 	    T->nxt	= settr(10,0,8,0,0,"IF", 0, 2, 0);
-	trans[0][4]	= settr(3,0,5,21,0,"((customers>0))", 1, 2, 0);
-	trans[0][5]	= settr(4,0,6,22,22,"sitting = queue[start]", 1, 2, 0);
-	trans[0][6]	= settr(5,0,7,23,23,"start = ((start+1)%1)", 1, 2, 0);
-	trans[0][7]	= settr(6,0,13,24,24,"customers = (customers-1)", 1, 2, 0);
+	trans[0][4]	= settr(3,0,5,19,0,"((customers>0))", 1, 2, 0);
+	trans[0][5]	= settr(4,0,6,20,20,"sitting = queue[start]", 1, 2, 0);
+	trans[0][6]	= settr(5,0,7,21,21,"start = ((start+1)%1)", 1, 2, 0);
+	trans[0][7]	= settr(6,0,13,22,22,"customers = (customers-1)", 1, 2, 0);
 	trans[0][12]	= settr(11,0,13,1,0,".(goto)", 0, 2, 0);
-	trans[0][8]	= settr(7,0,9,25,0,"((customers==0))", 1, 2, 0);
-	trans[0][9]	= settr(8,0,10,26,26,"sitting = 0", 1, 2, 0);
-	trans[0][10]	= settr(9,0,13,27,0,"printf('Barber sleeping\\n')", 1, 2, 0);
+	trans[0][8]	= settr(7,0,9,23,0,"((customers==0))", 1, 2, 0);
+	trans[0][9]	= settr(8,0,10,24,24,"sitting = 0", 1, 2, 0);
+	trans[0][10]	= settr(9,0,13,25,0,"printf('Barber sleeping\\n')", 0, 2, 0);
 	trans[0][15]	= settr(14,0,16,1,0,"break", 0, 2, 0);
-	trans[0][16]	= settr(15,0,0,28,28,"-end-", 0, 3500, 0);
+	trans[0][16]	= settr(15,0,0,26,26,"-end-", 0, 3500, 0);
 	/* np_ demon: */
 	trans[_NP_] = (Trans **) emalloc(3*sizeof(Trans *));
 	T = trans[_NP_][0] = settr(9997,0,1,_T5,0,"(np_)", 1,2,0);

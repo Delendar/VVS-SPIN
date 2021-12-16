@@ -102,7 +102,6 @@
 #ifndef NFAIR
 	#define NFAIR	2	/* must be >= 2 */
 #endif
-#define REM_REFS	4
 #define HAS_CODE	1
 #if defined(RANDSTORE) && !defined(RANDSTOR)
 	#define RANDSTOR	RANDSTORE
@@ -121,16 +120,10 @@
 #endif
 #ifdef NP
 	#define HAS_NP	2
-	#define VERI	3	/* np_ */
+	#define VERI	2	/* np_ */
 #endif
 #if defined(NOCLAIM) && defined(NP)
 	#undef NOCLAIM
-#endif
-#ifndef NOCLAIM
-	#define NCLAIMS	1
-	#ifndef NP
-		#define VERI	2
-	#endif
 #endif
 
 typedef struct S_F_MAP {
@@ -138,11 +131,6 @@ typedef struct S_F_MAP {
 	int from;
 	int upto;
 } S_F_MAP;
-
-#define _nstates2	11	/* never_0 */
-#define minseq2	35
-#define maxseq2	44
-#define _endstate2	10
 
 #define _nstates1	20	/* Customer */
 #define minseq1	16
@@ -154,16 +142,14 @@ typedef struct S_F_MAP {
 #define maxseq0	15
 #define _endstate0	16
 
-extern short src_ln2[];
 extern short src_ln1[];
 extern short src_ln0[];
-extern S_F_MAP src_file2[];
 extern S_F_MAP src_file1[];
 extern S_F_MAP src_file0[];
 
 #define T_ID	unsigned char
-#define _T5	29
-#define _T2	30
+#define _T5	27
+#define _T2	28
 #define WS		8 /* word size in bytes */
 #define SYNC	0
 #define ASYNC	0
@@ -177,16 +163,6 @@ extern S_F_MAP src_file0[];
 		#define NCORE	1
 	#endif
 #endif
-
-typedef struct P2 { /* never_0 */
-	unsigned _pid : 8;  /* 0..255 */
-	unsigned _t   : 3; /* proctype */
-	unsigned _p   : 6; /* state    */
-#ifdef HAS_PRIORITY
-	unsigned _priority : 8; /* 0..255 */
-#endif
-} P2;
-#define Air2	(sizeof(P2) - 3)
 
 #define PCustomer	((P1 *)_this)
 typedef struct P1 { /* Customer */
@@ -210,15 +186,15 @@ typedef struct P0 { /* Barber */
 } P0;
 #define Air0	(sizeof(P0) - 3)
 
-typedef struct P3 { /* np_ */
+typedef struct P2 { /* np_ */
 	unsigned _pid : 8;  /* 0..255 */
 	unsigned _t   : 3; /* proctype */
 	unsigned _p   : 6; /* state    */
 #ifdef HAS_PRIORITY
 	unsigned _priority : 8; /* 0..255 */
 #endif
-} P3;
-#define Air3	(sizeof(P3) - 3)
+} P2;
+#define Air2	(sizeof(P2) - 3)
 
 #define Pclaim	P0
 #ifndef NCLAIMS
@@ -440,18 +416,17 @@ typedef struct TRIX_v6 {
 #define FORWARD_MOVES	"pan.m"
 #define BACKWARD_MOVES	"pan.b"
 #define TRANSITIONS	"pan.t"
-#define _NP_	3
-#define _nstates3	3 /* np_ */
-#define _endstate3	2 /* np_ */
+#define _NP_	2
+#define _nstates2	3 /* np_ */
+#define _endstate2	2 /* np_ */
 
-#define _start3	0 /* np_ */
-#define _start2	6
+#define _start2	0 /* np_ */
 #define _start1	16
 #define _start0	13
 #ifdef NP
 	#define ACCEPT_LAB	1 /* at least 1 in np_ */
 #else
-	#define ACCEPT_LAB	1 /* user-defined accept labels */
+	#define ACCEPT_LAB	0 /* user-defined accept labels */
 #endif
 #ifdef MEMCNT
 	#ifdef MEMLIM
@@ -807,7 +782,7 @@ void qsend(int, int, int);
 #define GLOBAL	7
 #define BAD	8
 #define ALPHA_F	9
-#define NTRANS	31
+#define NTRANS	29
 #if defined(BFS_PAR) || NCORE>1
 	void e_critical(int);
 	void x_critical(int);

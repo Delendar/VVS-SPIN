@@ -77,7 +77,38 @@ Con este codigo tambien podemos ver que nos encontramos ante un deadlock, para e
 ``` c++
 spin barber0.pml
 ```
-y como esta nos muestra un timeout
+De otra forma si analizamos la traza que spin es capaz de dejarnos :
+``` c++
+spin -a barber0.pml
+gcc -o pan pan.c
+./pan
+spin -t -p barber0.pml
+```
+Nos encontramos la razon de porque se produce el timeout
+``` c++
+ ...
+ ...
+                  3 arrives
+2059:   proc  3 (Customer:1) exercise_a.pml:32 (state 1)        [printf('%d arrives\\n',_pid)]
+2060:   proc  3 (Customer:1) exercise_a.pml:33 (state 2)        [shaved[_pid] = unattended]
+2061:   proc  3 (Customer:1) exercise_a.pml:40 (state 6)        [(((sitting!=0)&&(customers<1)))]
+2062:   proc  3 (Customer:1) exercise_a.pml:41 (state 7)        [queue[end] = _pid]
+2063:   proc  3 (Customer:1) exercise_a.pml:42 (state 8)        [end = ((end+1)%1)]
+2064:   proc  3 (Customer:1) exercise_a.pml:43 (state 9)        [customers = (customers+1)]
+2065:   proc  0 (Barber:1) exercise_a.pml:24 (state 9)  [sitting = 0]
+      Barber sleeping
+2066:   proc  0 (Barber:1) exercise_a.pml:25 (state 10) [printf('Barber sleeping\\n')]
+spin: trail ends after 2066 steps
+...
+...
+``` 
+En este caso la ejecucion fue con simplemente 1 sitio en la sala de espera, por simplicidad.
+Podemos observar como eventualmente el cliente se mantiene en espera y al mismo tiempo el barbero esta durmiendo, es decir mientras que hay un cliente esperando el barbero esta durmiendo, por lo que no entran mas clientes porque ya esta la sala llena pero al mismo tiempo el barbero no atiende a nadie.
+
+De la misma forma se pueden analizar los apartados del ejercicio A. Como verificamos sin la necesidad de Spin :
+
+ 1. El barbero esta `durmiendo` mientras que hay un cliente `esperando`.
+ 2. El barbero esta `durmiendo` mientras hay clientes que se marchan sin ser `atendidos`. Que son los que no llegan a entrar en la sala de espera ya que esta llena con el cliente al que no atiende el barbero.
 ## TODO
  - Naive approach:
    - Razones del deadlock
