@@ -11,7 +11,7 @@ Un .zip, con barber0 y barber1.pml y un pdf con el informe
 
 # Exercise A :
 ``` text
-Using the naive approach code, force `Spin` to obtain counterexamples of the following (safety) properties:
+Using the naive approach code, force Spin to obtain counterexamples of the following (safety) properties:
  1. The barber cannot be sleeping while there are customers waiting.
  2. Any customer (take, for instance, 1) should never leave unattended while the barber is sleeping.
 ```
@@ -21,44 +21,59 @@ active proctype Barber() {
   do
   :: sitting!=BARBER ->
       printf("%d is being shaved\n",sitting);
-      shaved[sitting]=done;                  // done
+      shaved[sitting]=done;                  
       if
-      :: customers>0  -> sitting=queue[start]; // sit next customer
-                         start=next(start)     // removing from queue
-		         customers--
+      :: customers>0  -> sitting=queue[start]; 
+                         start=next(start)     
+		                 customers--
               
-      :: customers==0 -> sitting=BARBER;       // no one waiting, sleep again  
-sleeping:          printf("Barber sleeping\n")
+      :: customers==0 -> sitting=BARBER;        
+sleeping:          
+      printf("Barber sleeping\n")
       fi
   od
 }
 ```
-De esta forma dejamos indicado el punto en donde se debe de encontrar el proceso del barbero _`barberSleeping`_.
+De esta forma dejamos indicado el punto en donde se identifica al "barbero durmiendo". Lo marcamos con la etiqueta: _`sleeping`_.
 ``` c++
+active [C] proctype Customer() {
   do
   ::  printf("%d arrives\n",_pid);
-      shaved[_pid]=unattended   // I start unshaved
+      shaved[_pid]=unattended   
       if
-                                        // mutex lock
-      :: sitting==BARBER -> sitting = _pid;      // I directly sit in the chair
-waiting:		            shaved[_pid]==done   // wait until being shaved
-                                        // mutex unlock
-                                        // mutex lock
+                                        
+      :: sitting==BARBER -> sitting = _pid;
+waiting:		      shaved[_pid]==done   
+
       :: sitting!=BARBER && customers<N ->
-                   queue[end]=_pid;     // I enter the waiting queue
-                   end=next(end);       // mutex lock
-            customers++;     
-		    shaved[_pid]==done   // wait until being shaved
-      :: sitting!=BARBER && customers==N ->
-                   skip
+                  queue[end]=_pid;     
+                  end=next(end);       
+                  customers++;     
+
+		              shaved[_pid]==done   
+leftUnattended:    skip
       fi;
   leave:    printf("%d left %e\n",_pid,shaved[_pid])
   od
 }
 ```
-Y dejamos indicado el punto en donde se debe de encontrar el proceso del cliente _`customerWaits`_.
+Dejamos indicado el punto en donde se debe de encontrar el proceso del cliente cuando este esta esperando. Marcado con la etiqueta: _`waiting`_.
 
-Para esto se debe de cumplir que estén activas las dos condiciones, _`sleepingBarber`_ y _`customerWaits`_, entonces :
- - [](Barber@sleepingBarber && Customer@customerWaits)
-Para verificar esto con Spin:
- - ![](Barber@sleepingBarber && Customer@customerWaits)
+Para esto se debe de cumplir que en ningun instante de tiempo, las dos condiciones _`sleeping`_ y _`waiting`_ van a estar activas, entonces :
+ - []!(Barber@sleepingBarber && Customer@customerWaits)
+
+Para verificar esto con Spin hemos de negar el predicado :
+ - ![]!(Barber@sleepingBarber && Customer@customerWaits)
+
+Para el apartado 2, haremos uso de la posibilidad de que el barbero este durmiendo _`sleeping`_ y de que un cliente se vaya desatendido, etiqueta _`leftUnattended`_, en este caso tenemos algo similiar al apartado anterior, no se debe de cumplir en ningun instante de tiempo que estas dos secciones se ejecuten al mismo tiempo, entonces :
+ - []!(Barber@sleeping && Customer@leftUnattended)
+
+Para verificar esto con Spin, negamos la prueba :
+ - ![]!(Barber@sleeping && Customer@leftUnattended)
+
+Spin detecta ilegalidades en ambas aserciones, dando como resultado que se podrian llegar a cumplir estas. Tambien produciendo los correspondientes contraejemplos.
+
+## TODO
+ - Naive approach:
+   - Razones del deadlock
+   - Razones del erroneo funcionamiento. (Un poco mas en detalle el porque se ejecutan al mismo tiempo?)

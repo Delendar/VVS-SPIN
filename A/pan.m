@@ -20,7 +20,7 @@
 		_m = 3; goto P999;
 
 		 /* CLAIM never_0 */
-	case 3: // STATE 1 - exercise_a.pml.nvr:5 - [(!(((Barber._p==sleeping)&&(Customer._p==waiting))))] (6:0:0 - 1)
+	case 3: // STATE 1 - exercise_a.pml.nvr:5 - [(((Barber._p==sleeping)&&(Customer._p==leftUnattended)))] (6:0:0 - 1)
 		
 #if defined(VERI) && !defined(NP)
 #if NCLAIMS>1
@@ -43,11 +43,11 @@
 #endif
 #endif
 		reached[2][1] = 1;
-		if (!( !(((((int)((P0 *)Pptr(f_pid(0)))->_p)==10)&&(((int)((P1 *)Pptr(f_pid(1)))->_p)==5)))))
+		if (!(((((int)((P0 *)Pptr(f_pid(0)))->_p)==10)&&(((int)((P1 *)Pptr(f_pid(1)))->_p)==12))))
 			continue;
-		/* merge: assert(!(!(((Barber._p==sleeping)&&(Customer._p==waiting)))))(0, 2, 6) */
+		/* merge: assert(!(((Barber._p==sleeping)&&(Customer._p==leftUnattended))))(0, 2, 6) */
 		reached[2][2] = 1;
-		spin_assert( !( !(((((int)((P0 *)Pptr(f_pid(0)))->_p)==10)&&(((int)((P1 *)Pptr(f_pid(1)))->_p)==5)))), " !( !(((Barber._p==sleeping)&&(Customer._p==waiting))))", II, tt, t);
+		spin_assert( !(((((int)((P0 *)Pptr(f_pid(0)))->_p)==10)&&(((int)((P1 *)Pptr(f_pid(1)))->_p)==12))), " !(((Barber._p==sleeping)&&(Customer._p==leftUnattended)))", II, tt, t);
 		/* merge: .(goto)(0, 7, 6) */
 		reached[2][7] = 1;
 		;

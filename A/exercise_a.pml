@@ -43,7 +43,7 @@ waiting:		            shaved[_pid]==done   // wait until being shaved
             customers++;     
 		    shaved[_pid]==done   // wait until being shaved
       :: sitting!=BARBER && customers==N ->
-                   skip
+leftUnattended:                   skip
       fi;
   leave:    printf("%d left %e\n",_pid,shaved[_pid])
   od

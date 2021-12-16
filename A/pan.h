@@ -1,10 +1,10 @@
 #ifndef PAN_H
 #define PAN_H
 
-#define SpinVersion	"Spin Version 6.5.1 -- 31 July 2020"
+#define SpinVersion	"Spin Version 6.5.2 -- 6 December 2019"
 #define PanSource	"exercise_a.pml"
 
-#define G_long	4
+#define G_long	8
 #define G_int	4
 
 #define ulong	unsigned long
@@ -111,7 +111,7 @@
 #if !defined(HAS_LAST) && defined(BCS)
 	#define HAS_LAST	1 /* use it, but */
 	#ifndef STORE_LAST
-		#define NO_LAST	1 /* don't store it */
+		#define NO_LAST	1 /* dont store it */
 	#endif
 #endif
 #if defined(BCS) && defined(BITSTATE)
@@ -164,7 +164,7 @@ extern S_F_MAP src_file0[];
 #define T_ID	unsigned char
 #define _T5	29
 #define _T2	30
-#define WS		4 /* word size in bytes */
+#define WS		8 /* word size in bytes */
 #define SYNC	0
 #define ASYNC	0
 
