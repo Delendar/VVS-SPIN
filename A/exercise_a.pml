@@ -1,4 +1,4 @@
-#define N 2         // Number of waiting room chairs
+#define N 1         // Number of waiting room chairs
 #define BARBER 0    // The barber is numbered by his pid = 0
 #define C 4         // Customers will be numbered from 1 to C
 mtype={done,unattended};

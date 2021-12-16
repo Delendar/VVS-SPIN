@@ -20,7 +20,7 @@
 		_m = 3; goto P999;
 
 		 /* CLAIM never_0 */
-	case 3: // STATE 1 - exercise_a.pml.nvr:5 - [(((Barber._p==sleeping)&&(Customer._p==leftUnattended)))] (6:0:0 - 1)
+	case 3: // STATE 1 - exercise_a.pml.nvr:5 - [(((Barber._p==sleeping)&&(Customer._p==waiting)))] (6:0:0 - 1)
 		
 #if defined(VERI) && !defined(NP)
 #if NCLAIMS>1
@@ -43,11 +43,11 @@
 #endif
 #endif
 		reached[2][1] = 1;
-		if (!(((((int)((P0 *)Pptr(f_pid(0)))->_p)==10)&&(((int)((P1 *)Pptr(f_pid(1)))->_p)==12))))
+		if (!(((((int)((P0 *)Pptr(f_pid(0)))->_p)==10)&&(((int)((P1 *)Pptr(f_pid(1)))->_p)==5))))
 			continue;
-		/* merge: assert(!(((Barber._p==sleeping)&&(Customer._p==leftUnattended))))(0, 2, 6) */
+		/* merge: assert(!(((Barber._p==sleeping)&&(Customer._p==waiting))))(0, 2, 6) */
 		reached[2][2] = 1;
-		spin_assert( !(((((int)((P0 *)Pptr(f_pid(0)))->_p)==10)&&(((int)((P1 *)Pptr(f_pid(1)))->_p)==12))), " !(((Barber._p==sleeping)&&(Customer._p==leftUnattended)))", II, tt, t);
+		spin_assert( !(((((int)((P0 *)Pptr(f_pid(0)))->_p)==10)&&(((int)((P1 *)Pptr(f_pid(1)))->_p)==5))), " !(((Barber._p==sleeping)&&(Customer._p==waiting)))", II, tt, t);
 		/* merge: .(goto)(0, 7, 6) */
 		reached[2][7] = 1;
 		;
@@ -116,27 +116,27 @@
 		if (!((now.shaved[ Index(((int)((P1 *)_this)->_pid), 5) ]==2)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 10: // STATE 6 - exercise_a.pml:40 - [(((sitting!=0)&&(customers<2)))] (0:0:0 - 1)
+	case 10: // STATE 6 - exercise_a.pml:40 - [(((sitting!=0)&&(customers<1)))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][6] = 1;
-		if (!(((((int)now.sitting)!=0)&&(((int)now.customers)<2))))
+		if (!(((((int)now.sitting)!=0)&&(((int)now.customers)<1))))
 			continue;
 		_m = 3; goto P999; /* 0 */
 	case 11: // STATE 7 - exercise_a.pml:41 - [queue[end] = _pid] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][7] = 1;
-		(trpt+1)->bup.oval = ((int)now.queue[ Index(((int)now.end), 2) ]);
-		now.queue[ Index(now.end, 2) ] = ((int)((P1 *)_this)->_pid);
+		(trpt+1)->bup.oval = ((int)now.queue[ Index(((int)now.end), 1) ]);
+		now.queue[ Index(now.end, 1) ] = ((int)((P1 *)_this)->_pid);
 #ifdef VAR_RANGES
-		logval("queue[end]", ((int)now.queue[ Index(((int)now.end), 2) ]));
+		logval("queue[end]", ((int)now.queue[ Index(((int)now.end), 1) ]));
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 12: // STATE 8 - exercise_a.pml:42 - [end = ((end+1)%2)] (0:0:1 - 1)
+	case 12: // STATE 8 - exercise_a.pml:42 - [end = ((end+1)%1)] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][8] = 1;
 		(trpt+1)->bup.oval = ((int)now.end);
-		now.end = ((((int)now.end)+1)%2);
+		now.end = ((((int)now.end)+1)%1);
 #ifdef VAR_RANGES
 		logval("end", ((int)now.end));
 #endif
@@ -158,10 +158,10 @@
 		if (!((now.shaved[ Index(((int)((P1 *)_this)->_pid), 5) ]==2)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 15: // STATE 11 - exercise_a.pml:45 - [(((sitting!=0)&&(customers==2)))] (0:0:0 - 1)
+	case 15: // STATE 11 - exercise_a.pml:45 - [(((sitting!=0)&&(customers==1)))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][11] = 1;
-		if (!(((((int)now.sitting)!=0)&&(((int)now.customers)==2))))
+		if (!(((((int)now.sitting)!=0)&&(((int)now.customers)==1))))
 			continue;
 		_m = 3; goto P999; /* 0 */
 	case 16: // STATE 15 - exercise_a.pml:48 - [printf('%d left %e\\n',_pid,shaved[_pid])] (0:0:0 - 4)
@@ -207,17 +207,17 @@
 		IfNotBlocked
 		reached[0][5] = 1;
 		(trpt+1)->bup.oval = ((int)now.sitting);
-		now.sitting = ((int)now.queue[ Index(((int)now.start), 2) ]);
+		now.sitting = ((int)now.queue[ Index(((int)now.start), 1) ]);
 #ifdef VAR_RANGES
 		logval("sitting", ((int)now.sitting));
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 23: // STATE 6 - exercise_a.pml:21 - [start = ((start+1)%2)] (0:0:1 - 1)
+	case 23: // STATE 6 - exercise_a.pml:21 - [start = ((start+1)%1)] (0:0:1 - 1)
 		IfNotBlocked
 		reached[0][6] = 1;
 		(trpt+1)->bup.oval = ((int)now.start);
-		now.start = ((((int)now.start)+1)%2);
+		now.start = ((((int)now.start)+1)%1);
 #ifdef VAR_RANGES
 		logval("start", ((int)now.start));
 #endif

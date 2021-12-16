@@ -39,7 +39,7 @@
 		
 	case 11: // STATE 7
 		;
-		now.queue[ Index(now.end, 2) ] = trpt->bup.oval;
+		now.queue[ Index(now.end, 1) ] = trpt->bup.oval;
 		;
 		goto R999;
 

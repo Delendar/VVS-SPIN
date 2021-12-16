@@ -34,9 +34,9 @@ settable(void)
 	    T->nxt	= settr(40,0,4,0,0,"DO", 0, 2, 0);
 	T = trans[ 2][3] = settr(37,2,0,0,0,"ATOMIC", 1, 2, 0);
 	T->nxt	= settr(37,2,1,0,0,"ATOMIC", 1, 2, 0);
-	trans[2][1]	= settr(35,0,6,3,3,"(((Barber._p==sleeping)&&(Customer._p==leftUnattended)))", 1, 2, 0); /* m: 2 -> 6,0 */
+	trans[2][1]	= settr(35,0,6,3,3,"(((Barber._p==sleeping)&&(Customer._p==waiting)))", 1, 2, 0); /* m: 2 -> 6,0 */
 	reached2[2] = 1;
-	trans[2][2]	= settr(0,0,0,0,0,"assert(!(((Barber._p==sleeping)&&(Customer._p==leftUnattended))))",0,0,0);
+	trans[2][2]	= settr(0,0,0,0,0,"assert(!(((Barber._p==sleeping)&&(Customer._p==waiting))))",0,0,0);
 	trans[2][4]	= settr(38,0,6,1,0,"(1)", 0, 2, 0);
 	trans[2][5]	= settr(39,0,6,1,0,"goto T0_init", 0, 2, 0);
 	trans[2][8]	= settr(42,0,9,1,0,"break", 0, 2, 0);
@@ -60,13 +60,13 @@ settable(void)
 	trans[1][4]	= settr(19,0,5,8,8,"sitting = _pid", 1, 2, 0);
 	trans[1][5]	= settr(20,0,15,9,0,"((shaved[_pid]==done))", 1, 2, 0);
 	trans[1][14]	= settr(29,0,15,1,0,".(goto)", 0, 2, 0);
-	trans[1][6]	= settr(21,0,7,10,0,"(((sitting!=0)&&(customers<2)))", 1, 2, 0);
+	trans[1][6]	= settr(21,0,7,10,0,"(((sitting!=0)&&(customers<1)))", 1, 2, 0);
 	trans[1][7]	= settr(22,0,8,11,11,"queue[end] = _pid", 1, 2, 0);
-	trans[1][8]	= settr(23,0,9,12,12,"end = ((end+1)%2)", 1, 2, 0);
+	trans[1][8]	= settr(23,0,9,12,12,"end = ((end+1)%1)", 1, 2, 0);
 	trans[1][9]	= settr(24,0,10,13,13,"customers = (customers+1)", 1, 2, 0);
 	trans[1][10]	= settr(25,0,15,14,0,"((shaved[_pid]==done))", 1, 2, 0);
-	trans[1][11]	= settr(26,0,12,15,0,"(((sitting!=0)&&(customers==2)))", 1, 2, 0);
-	trans[1][12]	= settr(27,0,15,1,0,"(1)", 1, 2, 0);
+	trans[1][11]	= settr(26,0,12,15,0,"(((sitting!=0)&&(customers==1)))", 1, 2, 0);
+	trans[1][12]	= settr(27,0,15,1,0,"(1)", 0, 2, 0);
 	trans[1][15]	= settr(30,0,16,16,0,"printf('%d left %e\\n',_pid,shaved[_pid])", 1, 2, 0);
 	trans[1][18]	= settr(33,0,19,1,0,"break", 0, 2, 0);
 	trans[1][19]	= settr(34,0,0,17,17,"-end-", 0, 3500, 0);
@@ -86,7 +86,7 @@ settable(void)
 	    T->nxt	= settr(10,0,8,0,0,"IF", 0, 2, 0);
 	trans[0][4]	= settr(3,0,5,21,0,"((customers>0))", 1, 2, 0);
 	trans[0][5]	= settr(4,0,6,22,22,"sitting = queue[start]", 1, 2, 0);
-	trans[0][6]	= settr(5,0,7,23,23,"start = ((start+1)%2)", 1, 2, 0);
+	trans[0][6]	= settr(5,0,7,23,23,"start = ((start+1)%1)", 1, 2, 0);
 	trans[0][7]	= settr(6,0,13,24,24,"customers = (customers-1)", 1, 2, 0);
 	trans[0][12]	= settr(11,0,13,1,0,".(goto)", 0, 2, 0);
 	trans[0][8]	= settr(7,0,9,25,0,"((customers==0))", 1, 2, 0);

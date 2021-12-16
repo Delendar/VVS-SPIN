@@ -60,10 +60,10 @@ leftUnattended:    skip
 Dejamos indicado el punto en donde se debe de encontrar el proceso del cliente cuando este esta esperando. Marcado con la etiqueta: _`waiting`_.
 
 Para esto se debe de cumplir que en ningun instante de tiempo, las dos condiciones _`sleeping`_ y _`waiting`_ van a estar activas, entonces :
- - []!(Barber@sleepingBarber && Customer@customerWaits)
+ - []!(Barber@sleeping && Customer@waiting)
 
 Para verificar esto con Spin hemos de negar el predicado :
- - ![]!(Barber@sleepingBarber && Customer@customerWaits)
+ - ![]!(Barber@sleeping && Customer@waiting)
 
 Para el apartado 2, haremos uso de la posibilidad de que el barbero este durmiendo _`sleeping`_ y de que un cliente se vaya desatendido, etiqueta _`leftUnattended`_, en este caso tenemos algo similiar al apartado anterior, no se debe de cumplir en ningun instante de tiempo que estas dos secciones se ejecuten al mismo tiempo, entonces :
  - []!(Barber@sleeping && Customer@leftUnattended)
@@ -73,7 +73,37 @@ Para verificar esto con Spin, negamos la prueba :
 
 Spin detecta ilegalidades en ambas aserciones, dando como resultado que se podrian llegar a cumplir estas. Tambien produciendo los correspondientes contraejemplos.
 
+Con este codigo tambien podemos ver que nos encontramos ante un deadlock, para ello podemos fijarnos el la ejecucion simple de Spin :
+``` c++
+spin barber0.pml
+```
+y como esta nos muestra un timeout
 ## TODO
  - Naive approach:
    - Razones del deadlock
    - Razones del erroneo funcionamiento. (Un poco mas en detalle el porque se ejecutan al mismo tiempo?)
+   - Pasa para cualquier N>=0 sitios en la sala de espera?
+
+## Comandos
+Compilar Spin:
+``` c++
+spin -a -f 'formula' archivo.pml
+gcc -o pan pan.c
+./pan
+```
+Argumentos spin
+``` c++
+ -a // genera el archivo pan.c
+ -f // aplica la formula
+ -t // muestra la traza de la simulacion generada (.trail), tambien -t[N]
+ -p // print all statements
+ -t -p // para hacer un seguimiento con todos los datos
+```
+Para ver si se encuentra un ciclo :
+``` c++
+spin -t -p file.pml
+```
+Para encontrar contraejemplos cortos :
+``` c++
+pan -a -f -i
+```

@@ -1042,7 +1042,7 @@ run(void)
 		Maxbody += WS - (Maxbody % WS);
 
 	accpstate[2][9] = 1;
-	visstate[1][12] = 1;
+	visstate[1][5] = 1;
 	visstate[0][10] = 1;
 	retrans(0, _nstates0, _start0, src_ln0, reached0, loopstate0);
 	retrans(1, _nstates1, _start1, src_ln1, reached1, loopstate1);
@@ -12395,7 +12395,7 @@ void
 iniglobals(int calling_pid)
 {
 	{	int l_in;
-		for (l_in = 0; l_in < 2; l_in++)
+		for (l_in = 0; l_in < 1; l_in++)
 		{
 			now.queue[l_in] = 0;
 		}
@@ -12412,7 +12412,7 @@ iniglobals(int calling_pid)
 	}
 #ifdef VAR_RANGES
 	{	int l_in;
-		for (l_in = 0; l_in < 2; l_in++)
+		for (l_in = 0; l_in < 1; l_in++)
 		{
 			logval("queue[l_in]", now.queue[l_in]);
 		}
@@ -14135,7 +14135,7 @@ c_globals(void)
 	printf("	mtype  done:	2\n");
 	printf("	mtype  unattended:	1\n");
 	{	int l_in;
-		for (l_in = 0; l_in < 2; l_in++)
+		for (l_in = 0; l_in < 1; l_in++)
 		{
 			printf("	byte   queue[%d]:	%d\n", l_in, now.queue[l_in]);
 		}

@@ -410,7 +410,7 @@ typedef struct State {
 		unsigned short _event;
 	#endif
 #endif
-	uchar queue[2];
+	uchar queue[1];
 	uchar start;
 	uchar end;
 	uchar customers;
