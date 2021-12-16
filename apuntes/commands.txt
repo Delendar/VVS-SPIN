@@ -1,0 +1,38 @@
+CLASS 10-21:
+
+Symbols     Spin Equivalent
+^           &&
+v           ||
+¬           !
+->          ->
+Cuadrado    []
+rombo       <>
+until       u
+
+spin -a -f '![](critical==0 || critical==1)' ejemplo.pml
+gcc -o pan pan.c
+pan
+
+Saber como si un proceso esta a punto de entrar en una seccion.
+Anotar la seccion con
+    algo: ....
+          ....
+          ....
+
+ademas las etiquetas (nombre) son locales al proceso
+P @ cs
+Q @ cs
+Significa: P (is at) cs
+
+Ejecucion:
+    spin -a -f '![]!(P@cs && Q@cs)' ejemplo.pml
+es lo mismo que 
+    spin -a -f '<>(P@cs && Q@cs)' ejemplo.pml
+
+id de proceso
+    _pid
+
+numero de procesos acivos en este momento
+    _nr_pr
+
+quedamos en init

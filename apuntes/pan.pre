@@ -1,0 +1,41 @@
+# 0 "clase.pml.nvr"
+# 0 "<built-in>"
+# 0 "<command-line>"
+# 1 "clase.pml.nvr"
+# 1 "clase.pml" 1
+proctype P (byte c; int n) {
+    printf("Executing process %c (%d)\n", c, n);
+    count = count + 1;
+}
+
+active proctype P() {
+    byte i=0;
+    do
+    :: if
+        :: i<4 -> i++;
+        :: i==2 -> i++;
+cs: printf("seccion critica %d\n", i);
+        :: i==4 -> i=0;
+        fi;
+        printf("seccion no critica %d\n", i);
+}
+
+
+
+
+
+init {
+    printf("Starting...\n");
+    run P('A', 100);
+    run P('B', 230);
+    _nr_pr==1;
+    printf("All process terminated\n");
+}
+# 2 "clase.pml.nvr" 2
+never {
+accept_init:
+T0_init:
+ do
+ :: (! ((P@cs))) -> goto T0_init
+ od;
+}
