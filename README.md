@@ -242,8 +242,8 @@ leftUnattended:     printf("%d Skipped, no room", _pid);
 Para comprobar las propiedades haremos uso de las nuevas etiquetas `working` y `attended`.
 
 Desarrollamos las formulas para comprobar las propiedades :
- 1. []Barber@working
-    - ![]Barber@working
+ 1. []<>Barber@working
+    - ![](<>Barber@working)
  2. [](Customer@waiting -> <>Customer@attended)
     - ![](Customer@waiting -> <>Customer@attended)
  3. []<>Customer[1]@attended
