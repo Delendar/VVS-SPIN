@@ -110,11 +110,7 @@ Para el apartado 2, haremos uso de la posibilidad de que el barbero este durmien
 Para verificar esto con Spin, negamos la prueba :
  - ![]!(Barber@sleeping && Customer@leftUnattended)
 
-<<<<<<< HEAD
-```` 
-=======
 ```` c++
->>>>>>> 18b0ed7eaaa8b078add7cf4dbd6172b31fec3ad0
 $ spin -t -p barber.pml
 
 010:   proc  0 (Barber:1) barber.pml:17 (state 2)      [printf('%d is being shaved\\n',sitting)]
