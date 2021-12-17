@@ -1,4 +1,4 @@
-#define N 2         // Number of waiting room chairs
+#define N 3         // Number of waiting room chairs
 #define BARBER 0    // The barber is numbered by his pid = 0
 #define C 4         // Customers will be numbered from 1 to C
 mtype={done,unattended};
@@ -11,11 +11,11 @@ byte sitting = BARBER; // The person sitting in the barberchair
 
 mtype shaved[C+1];      // Which persons have been shaved (0 not used: the barber)
 
-int freeseats = N;
+byte freeseats = N;
 bool mutex = true;
 bool ready = true;
 
-inline waitI(sem) { // macro definition
+inline waitI(sem) { 
     atomic {
         sem>0;
         sem--
@@ -37,37 +37,40 @@ inline signalB(sem) {
 
 active proctype Barber() {
     do
-    ::          waitI(customers);
-                waitB(mutex);
-working:        freeseats++;
-                sitting=queue[start];
-                shaved[sitting]= done;
-                start=next(start);
-                printf("%d is being shaved\n",sitting);
-                signalB(mutex);
-                signalB(ready);
-sleeping:       sitting = BARBER
+    ::  true -> 
+                waitI(customers)
+                waitB(mutex)
+working:        freeseats++
+                sitting=queue[start]
+                shaved[sitting]= done
+                start=next(start)
+                printf("Shave\n")
+                signalB(ready)
+                signalB(mutex)
     od
 }
 
 active [C] proctype Customer() {
   do
-  ::    waitB(mutex);
+  ::    waitB(mutex)
         if
         :: freeseats > 0 -> 
-            freeseats--;
-            shaved[_pid] = unattended;
-            queue[end]=_pid;
-            end=next(end);
-waiting:    printf("%d Waiting room\n",_pid);
-            signalI(customers);
-            signalB(mutex);
-            waitB(ready);
-attended:   shaved[_pid] == done
+                    freeseats--
+                    shaved[_pid] = unattended
+                    queue[end]=_pid
+                    printf("Pre-next %d\n", end)
+                    end=next(end)
+                    printf("Post-next %d\n", end)
+waiting:            printf("%d Waiting room\n",_pid)
+                    signalI(customers)
+                    signalB(mutex)
+                    waitB(ready)
+attended:           shaved[_pid] == done
+
         :: freeseats == 0 ->
-leftUnattended:     printf("%d Skipped, no room", _pid);
-                    signalB(mutex);
-            skip
+leftUnattended:     printf("%d Skipped, no room\n", _pid)
+                    signalB(mutex)
+                    skip
         fi
   od
 }

@@ -243,11 +243,94 @@ Para comprobar las propiedades haremos uso de las nuevas etiquetas `working` y `
 
 Desarrollamos las formulas para comprobar las propiedades :
  1. []<>Barber@working
-    - ![](<>Barber@working)
- 2. [](Customer@waiting -> <>Customer@attended)
-    - ![](Customer@waiting -> <>Customer@attended)
+    - ![]<>`(Barber@working)`
+ 2. ([]Customer@waiting -> <>Customer@attended)
+    - ![](`(Customer@waiting)` -> (<>`(Customer@attended)`))
  3. []<>Customer[1]@attended
-    - ![](<>Customer[1]@attended)
+    - ![]<>`(Customer[1]@attended)`
+
+Observamos que realizando la comprobacion de la propiedad 1 la evaluacion infinita ofrecida por pan nos indica que esta se cumple para cualquier instante.
+``` c++
+$ spin -a -f '![]<>(Barber@working)' barber1.pml
+$ gcc -o pan pan.c
+$ ./pan -a
+```
+En el caso de la tercera propiedad, tambien vemos que Spin encuentra un ciclo de aceptacion :
+``` c++
+$ spin -a -f '![]((Customer@waiting) -> (<>(Customer@attended)))' barber1.pml
+$ gcc -o pan pan.c
+$ ./pan -a
+warning: for p.o. reduction to be valid the never claim must be stutter-invariant
+(never claims generated from LTL formulae are stutter-invariant)
+pan:1: acceptance cycle (at depth 70)
+pan: wrote barber1.pml.trail
+
+(Spin Version 6.5.2 -- 6 December 2019)
+Warning: Search not completed
+        + Partial Order Reduction
+
+Full statespace search for:
+        never claim             + (never_0)
+        assertion violations    + (if within scope of claim)
+        acceptance   cycles     + (fairness disabled)
+        invalid end states      - (disabled by never claim)
+
+State-vector 68 byte, depth reached 79, errors: 1
+       40 states, stored
+        0 states, matched
+       40 transitions (= stored+matched)
+        0 atomic steps
+hash conflicts:         0 (resolved)
+
+Stats on memory usage (in Megabytes):
+    0.004       equivalent memory usage for states (stored*(State-vector + overhead))
+    0.285       actual memory usage for states
+  128.000       memory used for hash table (-w24)
+    0.534       memory used for DFS stack (-m10000)
+  128.730       total actual memory usage
+
+
+
+pan: elapsed time 0.01 seconds
+```
+Para la tercera propiedad, observamos que tambien se cumple para cualquier instante tal y como nos muestra Spin :
+``` c++
+$ spin -a -f '![](<>(Customer[1]@attended))' barber1.pml
+$ gcc -o pan pan.c
+$ ./pan -a
+warning: for p.o. reduction to be valid the never claim must be stutter-invariant
+(never claims generated from LTL formulae are stutter-invariant)
+pan:1: acceptance cycle (at depth 70)
+pan: wrote barber1.pml.trail
+
+(Spin Version 6.5.2 -- 6 December 2019)
+Warning: Search not completed
+        + Partial Order Reduction
+
+Full statespace search for:
+        never claim             + (never_0)
+        assertion violations    + (if within scope of claim)
+        acceptance   cycles     + (fairness disabled)
+        invalid end states      - (disabled by never claim)
+
+State-vector 68 byte, depth reached 79, errors: 1
+       40 states, stored
+        0 states, matched
+       40 transitions (= stored+matched)
+        0 atomic steps
+hash conflicts:         0 (resolved)
+
+Stats on memory usage (in Megabytes):
+    0.004       equivalent memory usage for states (stored*(State-vector + overhead))
+    0.285       actual memory usage for states
+  128.000       memory used for hash table (-w24)
+    0.534       memory used for DFS stack (-m10000)
+  128.730       total actual memory usage
+
+
+
+pan: elapsed time 0.01 seconds
+```
 ## TODO
  - Naive approach:
    - Mostrar contraejemplos?
