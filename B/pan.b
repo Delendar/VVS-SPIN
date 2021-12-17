@@ -33,41 +33,37 @@
 
 	case 9: // STATE 7
 		;
-		now.shaved[ Index(((P1 *)_this)->_pid, 5) ] = trpt->bup.oval;
+		now.shaved[ Index(((P1 *)_this)->_pid, 9) ] = trpt->bup.oval;
 		;
 		goto R999;
 
 	case 10: // STATE 8
 		;
-		now.queue[ Index(now.end, 3) ] = trpt->bup.oval;
+		now.queue[ Index(now.end, 4) ] = trpt->bup.oval;
 		;
 		goto R999;
-;
-		;
-		
-	case 12: // STATE 10
+
+	case 11: // STATE 9
 		;
 		now.end = trpt->bup.oval;
 		;
 		goto R999;
 ;
 		;
-		;
-		;
 		
-	case 15: // STATE 13
+	case 13: // STATE 11
 		;
 		now.customers = trpt->bup.oval;
 		;
 		goto R999;
 
-	case 16: // STATE 15
+	case 14: // STATE 13
 		;
 		now.mutex = trpt->bup.oval;
 		;
 		goto R999;
 
-	case 17: // STATE 18
+	case 15: // STATE 16
 		;
 		now.ready = trpt->bup.oval;
 		;
@@ -79,13 +75,13 @@
 		;
 		;
 		
-	case 21: // STATE 24
+	case 19: // STATE 22
 		;
 		now.mutex = trpt->bup.oval;
 		;
 		goto R999;
 
-	case 22: // STATE 32
+	case 20: // STATE 30
 		;
 		p_restor(II);
 		;
@@ -94,37 +90,37 @@
 
 		 /* PROC Barber */
 
-	case 23: // STATE 3
+	case 21: // STATE 3
 		;
 		now.customers = trpt->bup.oval;
 		;
 		goto R999;
 
-	case 24: // STATE 7
+	case 22: // STATE 7
 		;
 		now.mutex = trpt->bup.oval;
 		;
 		goto R999;
 
-	case 25: // STATE 10
+	case 23: // STATE 10
 		;
 		now.freeseats = trpt->bup.oval;
 		;
 		goto R999;
 
-	case 26: // STATE 11
+	case 24: // STATE 11
 		;
 		now.sitting = trpt->bup.oval;
 		;
 		goto R999;
 
-	case 27: // STATE 12
+	case 25: // STATE 12
 		;
-		now.shaved[ Index(now.sitting, 5) ] = trpt->bup.oval;
+		now.shaved[ Index(now.sitting, 9) ] = trpt->bup.oval;
 		;
 		goto R999;
 
-	case 28: // STATE 13
+	case 26: // STATE 13
 		;
 		now.start = trpt->bup.oval;
 		;
@@ -132,19 +128,19 @@
 ;
 		;
 		
-	case 30: // STATE 15
+	case 28: // STATE 15
 		;
 		now.ready = trpt->bup.oval;
 		;
 		goto R999;
 
-	case 31: // STATE 17
+	case 29: // STATE 17
 		;
 		now.mutex = trpt->bup.oval;
 		;
 		goto R999;
 
-	case 32: // STATE 22
+	case 30: // STATE 22
 		;
 		p_restor(II);
 		;

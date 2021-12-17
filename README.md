@@ -255,7 +255,7 @@ $ spin -a -f '![]<>(Barber@working)' barber1.pml
 $ gcc -o pan pan.c
 $ ./pan -a
 ```
-En el caso de la tercera propiedad, tambien vemos que Spin encuentra un ciclo de aceptacion :
+En el caso de la segunda propiedad, tambien vemos que Spin encuentra un ciclo de aceptacion :
 ``` c++
 $ spin -a -f '![]((Customer@waiting) -> (<>(Customer@attended)))' barber1.pml
 $ gcc -o pan pan.c
@@ -333,11 +333,10 @@ pan: elapsed time 0.01 seconds
 ```
 ## TODO
  - Naive approach:
-   - Mostrar contraejemplos?
    - Pasa para cualquier N>=0 sitios en la sala de espera?
  - Classical solution:
-   - Exercise B
    - Exercise C
+     - Try query with C<N
 
 ## Comandos
 Compilar Spin:

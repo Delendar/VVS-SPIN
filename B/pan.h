@@ -140,14 +140,14 @@ typedef struct S_F_MAP {
 } S_F_MAP;
 
 #define _nstates2	14	/* never_0 */
-#define minseq2	54
-#define maxseq2	66
+#define minseq2	52
+#define maxseq2	64
 #define _endstate2	13
 
-#define _nstates1	33	/* Customer */
+#define _nstates1	31	/* Customer */
 #define minseq1	22
-#define maxseq1	53
-#define _endstate1	32
+#define maxseq1	51
+#define _endstate1	30
 
 #define _nstates0	23	/* Barber */
 #define minseq0	0
@@ -162,8 +162,8 @@ extern S_F_MAP src_file1[];
 extern S_F_MAP src_file0[];
 
 #define T_ID	unsigned char
-#define _T5	33
-#define _T2	34
+#define _T5	31
+#define _T2	32
 #define WS		8 /* word size in bytes */
 #define SYNC	0
 #define ASYNC	0
@@ -181,7 +181,7 @@ extern S_F_MAP src_file0[];
 typedef struct P2 { /* never_0 */
 	unsigned _pid : 8;  /* 0..255 */
 	unsigned _t   : 3; /* proctype */
-	unsigned _p   : 7; /* state    */
+	unsigned _p   : 6; /* state    */
 #ifdef HAS_PRIORITY
 	unsigned _priority : 8; /* 0..255 */
 #endif
@@ -192,7 +192,7 @@ typedef struct P2 { /* never_0 */
 typedef struct P1 { /* Customer */
 	unsigned _pid : 8;  /* 0..255 */
 	unsigned _t   : 3; /* proctype */
-	unsigned _p   : 7; /* state    */
+	unsigned _p   : 6; /* state    */
 #ifdef HAS_PRIORITY
 	unsigned _priority : 8; /* 0..255 */
 #endif
@@ -203,7 +203,7 @@ typedef struct P1 { /* Customer */
 typedef struct P0 { /* Barber */
 	unsigned _pid : 8;  /* 0..255 */
 	unsigned _t   : 3; /* proctype */
-	unsigned _p   : 7; /* state    */
+	unsigned _p   : 6; /* state    */
 #ifdef HAS_PRIORITY
 	unsigned _priority : 8; /* 0..255 */
 #endif
@@ -213,7 +213,7 @@ typedef struct P0 { /* Barber */
 typedef struct P3 { /* np_ */
 	unsigned _pid : 8;  /* 0..255 */
 	unsigned _t   : 3; /* proctype */
-	unsigned _p   : 7; /* state    */
+	unsigned _p   : 6; /* state    */
 #ifdef HAS_PRIORITY
 	unsigned _priority : 8; /* 0..255 */
 #endif
@@ -412,13 +412,13 @@ typedef struct State {
 #endif
 	unsigned mutex : 1;
 	unsigned ready : 1;
-	uchar queue[3];
+	uchar queue[4];
 	uchar start;
 	uchar end;
 	uchar customers;
 	uchar sitting;
 	uchar freeseats;
-	uchar shaved[5];
+	uchar shaved[9];
 #ifdef TRIX
 	/* room for 512 proc+chan ptrs, + safety margin */
 	char *_ids_[MAXPROC+MAXQ+4];
@@ -449,7 +449,7 @@ typedef struct TRIX_v6 {
 
 #define _start3	0 /* np_ */
 #define _start2	5
-#define _start1	29
+#define _start1	27
 #define _start0	19
 #ifdef NP
 	#define ACCEPT_LAB	1 /* at least 1 in np_ */
@@ -810,7 +810,7 @@ void qsend(int, int, int);
 #define GLOBAL	7
 #define BAD	8
 #define ALPHA_F	9
-#define NTRANS	35
+#define NTRANS	33
 #if defined(BFS_PAR) || NCORE>1
 	void e_critical(int);
 	void x_critical(int);

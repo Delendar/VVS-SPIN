@@ -506,21 +506,19 @@ uchar *loopstate2;
 
 short src_ln1 [] = {
 	  0,  30,  31,  29,  28,  57,  58,  59, 
-	 60,  61,  62,  63,  64,  25,  24,  35, 
-	 34,  30,  31,  29,  28,  68,  70,  71, 
-	 35,  34,  73,  56,  75,  54,  76,  54, 
-	 76,   0, };
+	 60,  61,  62,  25,  24,  35,  34,  30, 
+	 31,  29,  28,  66,  68,  69,  35,  34, 
+	 71,  56,  73,  54,  74,  54,  74,   0, };
 S_F_MAP src_file1 [] = {
 	{ "-", 0, 0 },
-	{ "barber1.pml", 1, 32 },
-	{ "-", 33, 34 }
+	{ "barber1.pml", 1, 30 },
+	{ "-", 31, 32 }
 };
 uchar reached1 [] = {
 	  0,   1,   0,   1,   1,   1,   0,   0, 
-	  0,   0,   0,   0,   0,   1,   0,   1, 
-	  0,   1,   0,   1,   0,   0,   1,   0, 
-	  1,   0,   1,   0,   1,   0,   1,   1, 
-	  0,   0, };
+	  0,   0,   0,   1,   0,   1,   0,   1, 
+	  0,   1,   0,   0,   1,   0,   1,   0, 
+	  1,   0,   1,   0,   1,   1,   0,   0, };
 uchar *loopstate1;
 
 short src_ln0 [] = {
@@ -864,11 +862,11 @@ addproc(int calling_pid, int priority, int n)
 		break;
 	case 1:	/* Customer */
 		((P1 *)pptr(h))->_t = 1;
-		((P1 *)pptr(h))->_p = 29;
+		((P1 *)pptr(h))->_p = 27;
 #ifdef HAS_PRIORITY
 		((P1 *)pptr(h))->_priority = priority; /* was: 1 */
 #endif
-		reached1[29]=1;
+		reached1[27]=1;
 		/* params: */
 		/* locals: */
 #ifdef VAR_RANGES
@@ -1046,7 +1044,7 @@ run(void)
 		Maxbody += WS - (Maxbody % WS);
 
 	accpstate[2][10] = 1;
-	visstate[1][21] = 1;
+	visstate[0][10] = 1;
 	retrans(0, _nstates0, _start0, src_ln0, reached0, loopstate0);
 	retrans(1, _nstates1, _start1, src_ln1, reached1, loopstate1);
 	retrans(2, _nstates2, _start2, src_ln2, reached2, loopstate2);
@@ -12400,7 +12398,7 @@ iniglobals(int calling_pid)
 		now.mutex = 1;
 		now.ready = 1;
 	{	int l_in;
-		for (l_in = 0; l_in < 3; l_in++)
+		for (l_in = 0; l_in < 4; l_in++)
 		{
 			now.queue[l_in] = 0;
 		}
@@ -12409,9 +12407,9 @@ iniglobals(int calling_pid)
 		now.end = 0;
 		now.customers = 0;
 		now.sitting = 0;
-		now.freeseats = 3;
+		now.freeseats = 4;
 	{	int l_in;
-		for (l_in = 0; l_in < 5; l_in++)
+		for (l_in = 0; l_in < 9; l_in++)
 		{
 			now.shaved[l_in] = 0;
 		}
@@ -12420,7 +12418,7 @@ iniglobals(int calling_pid)
 		logval("mutex", now.mutex);
 		logval("ready", now.ready);
 	{	int l_in;
-		for (l_in = 0; l_in < 3; l_in++)
+		for (l_in = 0; l_in < 4; l_in++)
 		{
 			logval("queue[l_in]", now.queue[l_in]);
 		}
@@ -12431,7 +12429,7 @@ iniglobals(int calling_pid)
 		logval("sitting", now.sitting);
 		logval("freeseats", now.freeseats);
 	{	int l_in;
-		for (l_in = 0; l_in < 5; l_in++)
+		for (l_in = 0; l_in < 9; l_in++)
 		{
 			logval("shaved[l_in]", now.shaved[l_in]);
 		}
@@ -13021,7 +13019,15 @@ active_procs(void)
 		Addproc(1, 1);
 		Addproc(1, 1);
 		Addproc(1, 1);
+		Addproc(1, 1);
+		Addproc(1, 1);
+		Addproc(1, 1);
+		Addproc(1, 1);
 	} else {
+		Addproc(1, 1);
+		Addproc(1, 1);
+		Addproc(1, 1);
+		Addproc(1, 1);
 		Addproc(1, 1);
 		Addproc(1, 1);
 		Addproc(1, 1);
@@ -14144,7 +14150,7 @@ c_globals(void)
 	printf("	mtype  done:	2\n");
 	printf("	mtype  unattended:	1\n");
 	{	int l_in;
-		for (l_in = 0; l_in < 3; l_in++)
+		for (l_in = 0; l_in < 4; l_in++)
 		{
 			printf("	byte   queue[%d]:	%d\n", l_in, now.queue[l_in]);
 		}
@@ -14154,7 +14160,7 @@ c_globals(void)
 	printf("	byte   customers:	%d\n", now.customers);
 	printf("	byte   sitting:	%d\n", now.sitting);
 	{	int l_in;
-		for (l_in = 0; l_in < 5; l_in++)
+		for (l_in = 0; l_in < 9; l_in++)
 		{
 			printf("	mtype  shaved[%d]:	%d\n", l_in, now.shaved[l_in]);
 		}
@@ -14194,7 +14200,7 @@ c_chandump(int unused)
 {	unused++; /* avoid complaints */
 }
 
-Trans *t_id_lkup[67];
+Trans *t_id_lkup[65];
 
 
 #ifdef BFS_PAR

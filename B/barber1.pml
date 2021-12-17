@@ -1,6 +1,6 @@
-#define N 3         // Number of waiting room chairs
+#define N 4         // Number of waiting room chairs
 #define BARBER 0    // The barber is numbered by his pid = 0
-#define C 4         // Customers will be numbered from 1 to C
+#define C 8         // Customers will be numbered from 1 to C
 mtype={done,unattended};
 
 byte queue[N];
@@ -25,7 +25,7 @@ inline signalI(sem) {
     sem++
 }
 
-inline waitB(sem) { // macro definition
+inline waitB(sem) {
     atomic {
         sem;
         sem=false
@@ -38,15 +38,15 @@ inline signalB(sem) {
 active proctype Barber() {
     do
     ::  true -> 
-                waitI(customers)
-                waitB(mutex)
-working:        freeseats++
-                sitting=queue[start]
-                shaved[sitting]= done
-                start=next(start)
-                printf("Shave\n")
-                signalB(ready)
-                signalB(mutex)
+                    waitI(customers)
+                    waitB(mutex)
+working:            freeseats++
+                    sitting=queue[start]
+                    shaved[sitting]= done
+                    start=next(start)
+                    printf("Barber shaved %d\n", sitting)
+sleeping:           signalB(ready)
+                    signalB(mutex)
     od
 }
 
@@ -58,9 +58,7 @@ active [C] proctype Customer() {
                     freeseats--
                     shaved[_pid] = unattended
                     queue[end]=_pid
-                    printf("Pre-next %d\n", end)
                     end=next(end)
-                    printf("Post-next %d\n", end)
 waiting:            printf("%d Waiting room\n",_pid)
                     signalI(customers)
                     signalB(mutex)
