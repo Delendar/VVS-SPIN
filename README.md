@@ -65,7 +65,7 @@ Para esto se debe de cumplir que en ningun instante de tiempo, las dos condicion
 Para verificar esto con Spin hemos de negar el predicado :
  - ![]!(Barber@sleeping && Customer@waiting)
 
-````
+```` c++
 $ spin -t -p barber.pml
 
 ...
@@ -106,7 +106,7 @@ Para el apartado 2, haremos uso de la posibilidad de que el barbero este durmien
 Para verificar esto con Spin, negamos la prueba :
  - ![]!(Barber@sleeping && Customer@leftUnattended)
 
-```` 
+```` c++
 $ spin -t -p barber.pml
 
 010:   proc  0 (Barber:1) barber.pml:17 (state 2)      [printf('%d is being shaved\\n',sitting)]
@@ -215,15 +215,15 @@ active [C] proctype Customer() {
   ::    waitB(mutex);
         if
         :: freeseats > 0 -> 
-            freeseats--;
-            shaved[_pid] = unattended;
-            queue[end]=_pid;
-            end=next(end);
-waiting:    printf("%d Waiting room\n",_pid);
-            signalI(customers);
-            signalB(mutex);
-            waitB(ready);
-attended:   shaved[_pid] == done
+                    freeseats--;
+                    shaved[_pid] = unattended;
+                    queue[end]=_pid;
+                    end=next(end);
+waiting:            printf("%d Waiting room\n",_pid);
+                    signalI(customers);
+                    signalB(mutex);
+                    waitB(ready);
+attended:           shaved[_pid] == done
         :: freeseats == 0 ->
 leftUnattended:     printf("%d Skipped, no room", _pid);
                     signalB(mutex);
