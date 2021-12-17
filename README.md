@@ -65,7 +65,11 @@ Para esto se debe de cumplir que en ningun instante de tiempo, las dos condicion
 Para verificar esto con Spin hemos de negar el predicado :
  - ![]!(Barber@sleeping && Customer@waiting)
 
+<<<<<<< HEAD
 ````
+=======
+```` c++
+>>>>>>> 18b0ed7eaaa8b078add7cf4dbd6172b31fec3ad0
 $ spin -t -p barber.pml
 
 ...
@@ -106,7 +110,11 @@ Para el apartado 2, haremos uso de la posibilidad de que el barbero este durmien
 Para verificar esto con Spin, negamos la prueba :
  - ![]!(Barber@sleeping && Customer@leftUnattended)
 
+<<<<<<< HEAD
 ```` 
+=======
+```` c++
+>>>>>>> 18b0ed7eaaa8b078add7cf4dbd6172b31fec3ad0
 $ spin -t -p barber.pml
 
 010:   proc  0 (Barber:1) barber.pml:17 (state 2)      [printf('%d is being shaved\\n',sitting)]
@@ -193,14 +201,150 @@ Prueba nuevamente las propiedades probadas en el Ejercicio A:
  2. Cualquier cliente nunca debe de irse desatendido mientras el barbero esta durmiendo, recordamos :
     - []!(Barber@sleeping && Customer@leftUnattended)
 
-En el nuevo código marcamos la posicion de las anteriores etiquetas 
+En el nuevo código marcamos la posicion que corresponderia a las anteriores etiquetas :
+``` c++
+active proctype Barber() {
+    do
+    ::          waitI(customers);
+                waitB(mutex);
+working:        freeseats++;
+                sitting=queue[start];
+                shaved[sitting]= done;
+                start=next(start);
+                printf("%d is being shaved\n",sitting);
+                signalB(mutex);
+                signalB(ready);
+sleeping:       sitting = BARBER
+    od
+}
+
+active [C] proctype Customer() {
+  do
+  ::    waitB(mutex);
+        if
+        :: freeseats > 0 -> 
+                    freeseats--;
+                    shaved[_pid] = unattended;
+                    queue[end]=_pid;
+                    end=next(end);
+waiting:            printf("%d Waiting room\n",_pid);
+                    signalI(customers);
+                    signalB(mutex);
+                    waitB(ready);
+attended:           shaved[_pid] == done
+        :: freeseats == 0 ->
+leftUnattended:     printf("%d Skipped, no room", _pid);
+                    signalB(mutex);
+            skip
+        fi
+  od
+}
+```
+ De la misma forma que en el anterior ambas propiedades se pueden volver a cumplir debido a como esta estructurado el codigo, pero lo que no va a ocurrir es que debido a estas se produzca un ciclo en el que el barbero este durmiendo y haya clientes esperando indefinidamente.
+
+ ## Nuevas Propiedades :
+ 1. El barbero puede trabajar indefinidamente.
+ 2. Si un cliente entra a la sala de espera, este eventualmente sera atendido.
+ 3. Un cliente puede ser atendido una cantidad infinita de veces. Prueba esto tambien con valores { NumeroClientes < NumeroSillasEspera }. Explica la diferencia.
+
+Para comprobar las propiedades haremos uso de las nuevas etiquetas `working` y `attended`.
+
+Desarrollamos las formulas para comprobar las propiedades :
+ 1. []<>Barber@working
+    - ![]<>`(Barber@working)`
+ 2. ([]Customer@waiting -> <>Customer@attended)
+    - ![](`(Customer@waiting)` -> (<>`(Customer@attended)`))
+ 3. []<>Customer[1]@attended
+    - ![]<>`(Customer[1]@attended)`
+
+Observamos que realizando la comprobacion de la propiedad 1 la evaluacion infinita ofrecida por pan nos indica que esta se cumple para cualquier instante.
+``` c++
+$ spin -a -f '![]<>(Barber@working)' barber1.pml
+$ gcc -o pan pan.c
+$ ./pan -a
+```
+En el caso de la segunda propiedad, tambien vemos que Spin encuentra un ciclo de aceptacion :
+``` c++
+$ spin -a -f '![]((Customer@waiting) -> (<>(Customer@attended)))' barber1.pml
+$ gcc -o pan pan.c
+$ ./pan -a
+warning: for p.o. reduction to be valid the never claim must be stutter-invariant
+(never claims generated from LTL formulae are stutter-invariant)
+pan:1: acceptance cycle (at depth 70)
+pan: wrote barber1.pml.trail
+
+(Spin Version 6.5.2 -- 6 December 2019)
+Warning: Search not completed
+        + Partial Order Reduction
+
+Full statespace search for:
+        never claim             + (never_0)
+        assertion violations    + (if within scope of claim)
+        acceptance   cycles     + (fairness disabled)
+        invalid end states      - (disabled by never claim)
+
+State-vector 68 byte, depth reached 79, errors: 1
+       40 states, stored
+        0 states, matched
+       40 transitions (= stored+matched)
+        0 atomic steps
+hash conflicts:         0 (resolved)
+
+Stats on memory usage (in Megabytes):
+    0.004       equivalent memory usage for states (stored*(State-vector + overhead))
+    0.285       actual memory usage for states
+  128.000       memory used for hash table (-w24)
+    0.534       memory used for DFS stack (-m10000)
+  128.730       total actual memory usage
+
+
+
+pan: elapsed time 0.01 seconds
+```
+Para la tercera propiedad, observamos que tambien se cumple para cualquier instante tal y como nos muestra Spin :
+``` c++
+$ spin -a -f '![](<>(Customer[1]@attended))' barber1.pml
+$ gcc -o pan pan.c
+$ ./pan -a
+warning: for p.o. reduction to be valid the never claim must be stutter-invariant
+(never claims generated from LTL formulae are stutter-invariant)
+pan:1: acceptance cycle (at depth 70)
+pan: wrote barber1.pml.trail
+
+(Spin Version 6.5.2 -- 6 December 2019)
+Warning: Search not completed
+        + Partial Order Reduction
+
+Full statespace search for:
+        never claim             + (never_0)
+        assertion violations    + (if within scope of claim)
+        acceptance   cycles     + (fairness disabled)
+        invalid end states      - (disabled by never claim)
+
+State-vector 68 byte, depth reached 79, errors: 1
+       40 states, stored
+        0 states, matched
+       40 transitions (= stored+matched)
+        0 atomic steps
+hash conflicts:         0 (resolved)
+
+Stats on memory usage (in Megabytes):
+    0.004       equivalent memory usage for states (stored*(State-vector + overhead))
+    0.285       actual memory usage for states
+  128.000       memory used for hash table (-w24)
+    0.534       memory used for DFS stack (-m10000)
+  128.730       total actual memory usage
+
+
+
+pan: elapsed time 0.01 seconds
+```
 ## TODO
  - Naive approach:
-   - Mostrar contraejemplos?
    - Pasa para cualquier N>=0 sitios en la sala de espera?
  - Classical solution:
-   - Exercise B
    - Exercise C
+     - Try query with C<N
 
 ## Comandos
 Compilar Spin:
