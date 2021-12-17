@@ -39,7 +39,7 @@ waiting:		            shaved[_pid]==done   // wait until being shaved
                                         // mutex lock
       :: sitting!=BARBER && customers<N ->
                    queue[end]=_pid;     // I enter the waiting queue
-                   end=next(end);       // mutex lock
+                   end=next(end);       
             customers++;     
 		    shaved[_pid]==done   // wait until being shaved
       :: sitting!=BARBER && customers==N ->

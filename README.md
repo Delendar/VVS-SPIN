@@ -65,11 +65,84 @@ Para esto se debe de cumplir que en ningun instante de tiempo, las dos condicion
 Para verificar esto con Spin hemos de negar el predicado :
  - ![]!(Barber@sleeping && Customer@waiting)
 
+````
+$ spin -t -p barber.pml
+
+...
+4076:   proc  1 (Customer:1) barber.pml:42 (state 10)   [((shaved[_pid]==done))]
+              1 left done
+4078:   proc  1 (Customer:1) barber.pml:46 (state 15)   [printf('%d left %e\\n',_pid,shaved[_pid])]
+              1 arrives
+4080:   proc  1 (Customer:1) barber.pml:32 (state 1)    [printf('%d arrives\\n',_pid)]
+4082:   proc  1 (Customer:1) barber.pml:33 (state 2)    [shaved[_pid] = unattended]
+4084:   proc  1 (Customer:1) barber.pml:38 (state 6)    [(((sitting!=0)&&(customers<2)))]
+4086:   proc  0 (Barber:1) barber.pml:24 (state 9)      [sitting = 0]
+spin: trail ends after 4087 steps
+#processes: 5
+                queue[0] = 1
+                queue[1] = 1
+                start = 0
+                end = 1
+                customers = 1
+                sitting = 0
+                shaved[0] = 0
+                shaved[1] = unattended
+                shaved[2] = unattended
+                shaved[3] = unattended
+                shaved[4] = unattended
+4087:   proc  4 (Customer:1) barber.pml:42 (state 10)
+4087:   proc  3 (Customer:1) barber.pml:42 (state 10)
+4087:   proc  2 (Customer:1) barber.pml:42 (state 10)
+4087:   proc  1 (Customer:1) barber.pml:39 (state 7)
+4087:   proc  0 (Barber:1) barber.pml:25 (state 10)
+5 processes created
+````
+
+Ejecutado con pan podemos observar que uno de los clientes está esperando (`customers = 1`) mientras el barbero está durmiendo (`sitting = 0`), de forma que se podria quedar esperando indefinidamente.
+
 Para el apartado 2, haremos uso de la posibilidad de que el barbero este durmiendo _`sleeping`_ y de que un cliente se vaya desatendido, etiqueta _`leftUnattended`_, en este caso tenemos algo similiar al apartado anterior, no se debe de cumplir en ningun instante de tiempo que estas dos secciones se ejecuten al mismo tiempo, entonces :
  - []!(Barber@sleeping && Customer@leftUnattended)
 
 Para verificar esto con Spin, negamos la prueba :
  - ![]!(Barber@sleeping && Customer@leftUnattended)
+
+```` 
+$ spin -t -p barber.pml
+
+010:   proc  0 (Barber:1) barber.pml:17 (state 2)      [printf('%d is being shaved\\n',sitting)]
+4012:   proc  0 (Barber:1) barber.pml:18 (state 3)      [shaved[sitting] = done]
+4014:   proc  0 (Barber:1) barber.pml:20 (state 4)      [((customers>0))]
+4016:   proc  0 (Barber:1) barber.pml:20 (state 5)      [sitting = queue[start]]
+4018:   proc  0 (Barber:1) barber.pml:21 (state 6)      [start = ((start+1)%2)]
+4020:   proc  0 (Barber:1) barber.pml:22 (state 7)      [customers = (customers-1)]
+4022:   proc  0 (Barber:1) barber.pml:16 (state 1)      [((sitting!=0))]
+          1 is being shaved
+4024:   proc  0 (Barber:1) barber.pml:17 (state 2)      [printf('%d is being shaved\\n',sitting)]
+4026:   proc  0 (Barber:1) barber.pml:18 (state 3)      [shaved[sitting] = done]
+4028:   proc  0 (Barber:1) barber.pml:24 (state 8)      [((customers==0))]
+4030:   proc  0 (Barber:1) barber.pml:24 (state 9)      [sitting = 0]
+spin: trail ends after 4031 steps
+#processes: 5
+                queue[0] = 1
+                queue[1] = 1
+                start = 1
+                end = 1
+                customers = 0
+                sitting = 0
+                shaved[0] = 0
+                shaved[1] = done
+                shaved[2] = unattended
+                shaved[3] = unattended
+                shaved[4] = unattended
+4031:   proc  4 (Customer:1) barber.pml:42 (state 10)
+4031:   proc  3 (Customer:1) barber.pml:42 (state 10)
+4031:   proc  2 (Customer:1) barber.pml:42 (state 10)
+4031:   proc  1 (Customer:1) barber.pml:44 (state 12)
+4031:   proc  0 (Barber:1) barber.pml:25 (state 10)
+5 processes created
+````
+
+En este caso, podemos ver que se da el caso de que el cliente se marcha sin atender cuando el barbero está durmiendo y el contador de clientes está a 0, pero todas las sillas están ocupadas (????)
 
 Spin detecta ilegalidades en ambas aserciones, dando como resultado que se podrian llegar a cumplir estas. Tambien produciendo los correspondientes contraejemplos.
 
@@ -109,6 +182,72 @@ De la misma forma se pueden analizar los apartados del ejercicio A. Como verific
 
  1. El barbero esta `durmiendo` mientras que hay un cliente `esperando`.
  2. El barbero esta `durmiendo` mientras hay clientes que se marchan sin ser `atendidos`. Que son los que no llegan a entrar en la sala de espera ya que esta llena con el cliente al que no atiende el barbero.
+
+# Ejercicio B :
+El código se puede encontrar en el archivo de Promela **_barber1.pml_**.
+
+# Ejercicio C :
+Prueba nuevamente las propiedades probadas en el Ejercicio A:
+ 1. El barbero no puede estar durmiendo mientras hay clientes esperando, recordamos :
+    - []!(Barber@sleeping && Customer@waiting)
+ 2. Cualquier cliente nunca debe de irse desatendido mientras el barbero esta durmiendo, recordamos :
+    - []!(Barber@sleeping && Customer@leftUnattended)
+
+En el nuevo código marcamos la posicion que corresponderia a las anteriores etiquetas :
+``` c++
+active proctype Barber() {
+    do
+    ::          waitI(customers);
+                waitB(mutex);
+working:        freeseats++;
+                sitting=queue[start];
+                shaved[sitting]= done;
+                start=next(start);
+                printf("%d is being shaved\n",sitting);
+                signalB(mutex);
+                signalB(ready);
+sleeping:       sitting = BARBER
+    od
+}
+
+active [C] proctype Customer() {
+  do
+  ::    waitB(mutex);
+        if
+        :: freeseats > 0 -> 
+            freeseats--;
+            shaved[_pid] = unattended;
+            queue[end]=_pid;
+            end=next(end);
+waiting:    printf("%d Waiting room\n",_pid);
+            signalI(customers);
+            signalB(mutex);
+            waitB(ready);
+attended:   shaved[_pid] == done
+        :: freeseats == 0 ->
+leftUnattended:     printf("%d Skipped, no room", _pid);
+                    signalB(mutex);
+            skip
+        fi
+  od
+}
+```
+ De la misma forma que en el anterior ambas propiedades se pueden volver a cumplir debido a como esta estructurado el codigo, pero lo que no va a ocurrir es que debido a estas se produzca un ciclo en el que el barbero este durmiendo y haya clientes esperando indefinidamente.
+
+ ## Nuevas Propiedades :
+ 1. El barbero puede trabajar indefinidamente.
+ 2. Si un cliente entra a la sala de espera, este eventualmente sera atendido.
+ 3. Un cliente puede ser atendido una cantidad infinita de veces. Prueba esto tambien con valores { NumeroClientes < NumeroSillasEspera }. Explica la diferencia.
+
+Para comprobar las propiedades haremos uso de las nuevas etiquetas `working` y `attended`.
+
+Desarrollamos las formulas para comprobar las propiedades :
+ 1. []Barber@working
+    - ![]Barber@working
+ 2. [](Customer@waiting -> <>Customer@attended)
+    - ![](Customer@waiting -> <>Customer@attended)
+ 3. []<>Customer[1]@attended
+    - ![](<>Customer[1]@attended)
 ## TODO
  - Naive approach:
    - Mostrar contraejemplos?

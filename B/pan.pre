@@ -1,0 +1,80 @@
+# 1 "exercise_b.pml"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 31 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 32 "<command-line>" 2
+# 1 "exercise_b.pml"
+
+
+
+mtype={done,unattended};
+
+byte queue[2];
+byte start=0,end=0,customers=0;
+
+
+byte sitting = 0;
+
+mtype shaved[4 +1];
+
+int freeseats = 2;
+bool mutex = true;
+bool ready = true;
+
+inline waitI(sem) {
+    atomic {
+        sem>0;
+        sem--
+    }
+}
+inline signalI(sem) {
+    sem++
+}
+
+inline waitB(sem) {
+    atomic {
+        sem;
+        sem=false
+    }
+}
+inline signalB(sem) {
+    sem=true
+}
+
+active proctype Barber() {
+    do
+    :: waitI(customers);
+                waitB(mutex);
+                freeseats++;
+                sitting=queue[start];
+                shaved[sitting]= done;
+                start=((start+1)%2);
+                printf("%d is being shaved\n",sitting);
+                signalB(mutex);
+                signalB(ready);
+sleeping: sitting = 0
+    od
+}
+
+active [4] proctype Customer() {
+  do
+  :: waitB(mutex);
+        if
+        :: freeseats > 0 ->
+            freeseats--;
+            shaved[_pid] = unattended;
+            queue[end]=_pid;
+            end=((end+1)%2);
+waiting: printf("%d Waiting room\n",_pid);
+            signalI(customers);
+            signalB(mutex);
+            waitB(ready);
+            shaved[_pid] == done
+        :: freeseats == 0 ->
+leftUnattended: printf("%d Skipped, no room", _pid);
+                    signalB(mutex);
+            skip
+        fi
+  od
+}
