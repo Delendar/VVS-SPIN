@@ -1044,7 +1044,7 @@ run(void)
 		Maxbody += WS - (Maxbody % WS);
 
 	accpstate[2][10] = 1;
-	visstate[0][10] = 1;
+	visstate[1][19] = 1;
 	retrans(0, _nstates0, _start0, src_ln0, reached0, loopstate0);
 	retrans(1, _nstates1, _start1, src_ln1, reached1, loopstate1);
 	retrans(2, _nstates2, _start2, src_ln2, reached2, loopstate2);
@@ -12398,7 +12398,7 @@ iniglobals(int calling_pid)
 		now.mutex = 1;
 		now.ready = 1;
 	{	int l_in;
-		for (l_in = 0; l_in < 4; l_in++)
+		for (l_in = 0; l_in < 8; l_in++)
 		{
 			now.queue[l_in] = 0;
 		}
@@ -12407,9 +12407,9 @@ iniglobals(int calling_pid)
 		now.end = 0;
 		now.customers = 0;
 		now.sitting = 0;
-		now.freeseats = 4;
+		now.freeseats = 8;
 	{	int l_in;
-		for (l_in = 0; l_in < 9; l_in++)
+		for (l_in = 0; l_in < 5; l_in++)
 		{
 			now.shaved[l_in] = 0;
 		}
@@ -12418,7 +12418,7 @@ iniglobals(int calling_pid)
 		logval("mutex", now.mutex);
 		logval("ready", now.ready);
 	{	int l_in;
-		for (l_in = 0; l_in < 4; l_in++)
+		for (l_in = 0; l_in < 8; l_in++)
 		{
 			logval("queue[l_in]", now.queue[l_in]);
 		}
@@ -12429,7 +12429,7 @@ iniglobals(int calling_pid)
 		logval("sitting", now.sitting);
 		logval("freeseats", now.freeseats);
 	{	int l_in;
-		for (l_in = 0; l_in < 9; l_in++)
+		for (l_in = 0; l_in < 5; l_in++)
 		{
 			logval("shaved[l_in]", now.shaved[l_in]);
 		}
@@ -13019,15 +13019,7 @@ active_procs(void)
 		Addproc(1, 1);
 		Addproc(1, 1);
 		Addproc(1, 1);
-		Addproc(1, 1);
-		Addproc(1, 1);
-		Addproc(1, 1);
-		Addproc(1, 1);
 	} else {
-		Addproc(1, 1);
-		Addproc(1, 1);
-		Addproc(1, 1);
-		Addproc(1, 1);
 		Addproc(1, 1);
 		Addproc(1, 1);
 		Addproc(1, 1);
@@ -14150,7 +14142,7 @@ c_globals(void)
 	printf("	mtype  done:	2\n");
 	printf("	mtype  unattended:	1\n");
 	{	int l_in;
-		for (l_in = 0; l_in < 4; l_in++)
+		for (l_in = 0; l_in < 8; l_in++)
 		{
 			printf("	byte   queue[%d]:	%d\n", l_in, now.queue[l_in]);
 		}
@@ -14160,7 +14152,7 @@ c_globals(void)
 	printf("	byte   customers:	%d\n", now.customers);
 	printf("	byte   sitting:	%d\n", now.sitting);
 	{	int l_in;
-		for (l_in = 0; l_in < 9; l_in++)
+		for (l_in = 0; l_in < 5; l_in++)
 		{
 			printf("	mtype  shaved[%d]:	%d\n", l_in, now.shaved[l_in]);
 		}

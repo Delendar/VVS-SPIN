@@ -1,6 +1,6 @@
-#define N 4         // Number of waiting room chairs
+#define N 8         // Number of waiting room chairs
 #define BARBER 0    // The barber is numbered by his pid = 0
-#define C 8         // Customers will be numbered from 1 to C
+#define C 4         // Customers will be numbered from 1 to C
 mtype={done,unattended};
 
 byte queue[N];

@@ -412,13 +412,13 @@ typedef struct State {
 #endif
 	unsigned mutex : 1;
 	unsigned ready : 1;
-	uchar queue[4];
+	uchar queue[8];
 	uchar start;
 	uchar end;
 	uchar customers;
 	uchar sitting;
 	uchar freeseats;
-	uchar shaved[9];
+	uchar shaved[5];
 #ifdef TRIX
 	/* room for 512 proc+chan ptrs, + safety margin */
 	char *_ids_[MAXPROC+MAXQ+4];

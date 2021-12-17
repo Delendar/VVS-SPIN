@@ -20,7 +20,7 @@
 		_m = 3; goto P999;
 
 		 /* CLAIM never_0 */
-	case 3: // STATE 1 - barber1.pml.nvr:5 - [(!((Barber._p==working)))] (0:0:0 - 1)
+	case 3: // STATE 1 - barber1.pml.nvr:5 - [(!((Customer[1]._p==attended)))] (0:0:0 - 1)
 		
 #if defined(VERI) && !defined(NP)
 #if NCLAIMS>1
@@ -43,10 +43,10 @@
 #endif
 #endif
 		reached[2][1] = 1;
-		if (!( !((((int)((P0 *)Pptr(f_pid(0)))->_p)==10))))
+		if (!( !((((int)((P1 *)Pptr(BASE+1))->_p)==19))))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 4: // STATE 8 - barber1.pml.nvr:10 - [(!((Barber._p==working)))] (0:0:0 - 1)
+	case 4: // STATE 8 - barber1.pml.nvr:10 - [(!((Customer[1]._p==attended)))] (0:0:0 - 1)
 		
 #if defined(VERI) && !defined(NP)
 #if NCLAIMS>1
@@ -69,7 +69,7 @@
 #endif
 #endif
 		reached[2][8] = 1;
-		if (!( !((((int)((P0 *)Pptr(f_pid(0)))->_p)==10))))
+		if (!( !((((int)((P1 *)Pptr(BASE+1))->_p)==19))))
 			continue;
 		_m = 3; goto P999; /* 0 */
 	case 5: // STATE 13 - barber1.pml.nvr:12 - [-end-] (0:0:0 - 1)
@@ -132,28 +132,28 @@
 	case 9: // STATE 7 - barber1.pml:59 - [shaved[_pid] = unattended] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][7] = 1;
-		(trpt+1)->bup.oval = now.shaved[ Index(((int)((P1 *)_this)->_pid), 9) ];
-		now.shaved[ Index(((P1 *)_this)->_pid, 9) ] = 1;
+		(trpt+1)->bup.oval = now.shaved[ Index(((int)((P1 *)_this)->_pid), 5) ];
+		now.shaved[ Index(((P1 *)_this)->_pid, 5) ] = 1;
 #ifdef VAR_RANGES
-		logval("shaved[_pid]", now.shaved[ Index(((int)((P1 *)_this)->_pid), 9) ]);
+		logval("shaved[_pid]", now.shaved[ Index(((int)((P1 *)_this)->_pid), 5) ]);
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
 	case 10: // STATE 8 - barber1.pml:60 - [queue[end] = _pid] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][8] = 1;
-		(trpt+1)->bup.oval = ((int)now.queue[ Index(((int)now.end), 4) ]);
-		now.queue[ Index(now.end, 4) ] = ((int)((P1 *)_this)->_pid);
+		(trpt+1)->bup.oval = ((int)now.queue[ Index(((int)now.end), 8) ]);
+		now.queue[ Index(now.end, 8) ] = ((int)((P1 *)_this)->_pid);
 #ifdef VAR_RANGES
-		logval("queue[end]", ((int)now.queue[ Index(((int)now.end), 4) ]));
+		logval("queue[end]", ((int)now.queue[ Index(((int)now.end), 8) ]));
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 11: // STATE 9 - barber1.pml:61 - [end = ((end+1)%4)] (0:0:1 - 1)
+	case 11: // STATE 9 - barber1.pml:61 - [end = ((end+1)%8)] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][9] = 1;
 		(trpt+1)->bup.oval = ((int)now.end);
-		now.end = ((((int)now.end)+1)%4);
+		now.end = ((((int)now.end)+1)%8);
 #ifdef VAR_RANGES
 		logval("end", ((int)now.end));
 #endif
@@ -201,7 +201,7 @@
 	case 16: // STATE 19 - barber1.pml:66 - [((shaved[_pid]==done))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][19] = 1;
-		if (!((now.shaved[ Index(((int)((P1 *)_this)->_pid), 9) ]==2)))
+		if (!((now.shaved[ Index(((int)((P1 *)_this)->_pid), 5) ]==2)))
 			continue;
 		_m = 3; goto P999; /* 0 */
 	case 17: // STATE 20 - barber1.pml:68 - [((freeseats==0))] (0:0:0 - 1)
@@ -274,7 +274,7 @@
 		IfNotBlocked
 		reached[0][11] = 1;
 		(trpt+1)->bup.oval = ((int)now.sitting);
-		now.sitting = ((int)now.queue[ Index(((int)now.start), 4) ]);
+		now.sitting = ((int)now.queue[ Index(((int)now.start), 8) ]);
 #ifdef VAR_RANGES
 		logval("sitting", ((int)now.sitting));
 #endif
@@ -283,18 +283,18 @@
 	case 25: // STATE 12 - barber1.pml:45 - [shaved[sitting] = done] (0:0:1 - 1)
 		IfNotBlocked
 		reached[0][12] = 1;
-		(trpt+1)->bup.oval = now.shaved[ Index(((int)now.sitting), 9) ];
-		now.shaved[ Index(now.sitting, 9) ] = 2;
+		(trpt+1)->bup.oval = now.shaved[ Index(((int)now.sitting), 5) ];
+		now.shaved[ Index(now.sitting, 5) ] = 2;
 #ifdef VAR_RANGES
-		logval("shaved[sitting]", now.shaved[ Index(((int)now.sitting), 9) ]);
+		logval("shaved[sitting]", now.shaved[ Index(((int)now.sitting), 5) ]);
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 26: // STATE 13 - barber1.pml:46 - [start = ((start+1)%4)] (0:0:1 - 1)
+	case 26: // STATE 13 - barber1.pml:46 - [start = ((start+1)%8)] (0:0:1 - 1)
 		IfNotBlocked
 		reached[0][13] = 1;
 		(trpt+1)->bup.oval = ((int)now.start);
-		now.start = ((((int)now.start)+1)%4);
+		now.start = ((((int)now.start)+1)%8);
 #ifdef VAR_RANGES
 		logval("start", ((int)now.start));
 #endif

@@ -32,7 +32,7 @@ settable(void)
 	T = trans[2][5] = settr(56,0,0,0,0,"DO", 0, 2, 0);
 	T = T->nxt	= settr(56,0,1,0,0,"DO", 0, 2, 0);
 	    T->nxt	= settr(56,0,3,0,0,"DO", 0, 2, 0);
-	trans[2][1]	= settr(52,0,10,3,0,"(!((Barber._p==working)))", 1, 2, 0);
+	trans[2][1]	= settr(52,0,10,3,0,"(!((Customer[1]._p==attended)))", 1, 2, 0);
 	trans[2][2]	= settr(53,0,10,1,0,"goto accept_S4", 0, 2, 0);
 	trans[2][3]	= settr(54,0,5,1,0,"(1)", 0, 2, 0);
 	trans[2][4]	= settr(55,0,5,1,0,"goto T0_init", 0, 2, 0);
@@ -40,7 +40,7 @@ settable(void)
 	trans[2][11]	= settr(62,0,10,1,0,".(goto)", 0, 2, 0);
 	T = trans[2][10] = settr(61,0,0,0,0,"DO", 0, 2, 0);
 	    T->nxt	= settr(61,0,8,0,0,"DO", 0, 2, 0);
-	trans[2][8]	= settr(59,0,10,4,0,"(!((Barber._p==working)))", 1, 2, 0);
+	trans[2][8]	= settr(59,0,10,4,0,"(!((Customer[1]._p==attended)))", 1, 2, 0);
 	trans[2][9]	= settr(60,0,10,1,0,"goto accept_S4", 0, 2, 0);
 	trans[2][12]	= settr(63,0,13,1,0,"break", 0, 2, 0);
 	trans[2][13]	= settr(64,0,0,5,5,"-end-", 0, 3500, 0);
@@ -66,7 +66,7 @@ settable(void)
 	trans[1][6]	= settr(27,0,7,8,8,"freeseats = (freeseats-1)", 1, 2, 0);
 	trans[1][7]	= settr(28,0,8,9,9,"shaved[_pid] = unattended", 1, 2, 0);
 	trans[1][8]	= settr(29,0,9,10,10,"queue[end] = _pid", 1, 2, 0);
-	trans[1][9]	= settr(30,0,10,11,11,"end = ((end+1)%4)", 1, 2, 0);
+	trans[1][9]	= settr(30,0,10,11,11,"end = ((end+1)%8)", 1, 2, 0);
 	trans[1][10]	= settr(31,0,12,12,0,"printf('%d Waiting room\\n',_pid)", 0, 2, 0);
 	T = trans[ 1][12] = settr(33,0,0,0,0,"sub-sequence", 0, 2, 0);
 	T->nxt	= settr(33,0,11,0,0,"sub-sequence", 0, 2, 0);
@@ -117,7 +117,7 @@ settable(void)
 	trans[0][10]	= settr(9,0,11,23,23,"freeseats = (freeseats+1)", 1, 2, 0);
 	trans[0][11]	= settr(10,0,12,24,24,"sitting = queue[start]", 1, 2, 0);
 	trans[0][12]	= settr(11,0,13,25,25,"shaved[sitting] = done", 1, 2, 0);
-	trans[0][13]	= settr(12,0,14,26,26,"start = ((start+1)%4)", 1, 2, 0);
+	trans[0][13]	= settr(12,0,14,26,26,"start = ((start+1)%8)", 1, 2, 0);
 	trans[0][14]	= settr(13,0,16,27,0,"printf('Barber shaved %d\\n',sitting)", 1, 2, 0);
 	T = trans[ 0][16] = settr(15,0,0,0,0,"sub-sequence", 0, 2, 0);
 	T->nxt	= settr(15,0,15,0,0,"sub-sequence", 0, 2, 0);

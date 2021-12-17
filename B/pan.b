@@ -33,13 +33,13 @@
 
 	case 9: // STATE 7
 		;
-		now.shaved[ Index(((P1 *)_this)->_pid, 9) ] = trpt->bup.oval;
+		now.shaved[ Index(((P1 *)_this)->_pid, 5) ] = trpt->bup.oval;
 		;
 		goto R999;
 
 	case 10: // STATE 8
 		;
-		now.queue[ Index(now.end, 4) ] = trpt->bup.oval;
+		now.queue[ Index(now.end, 8) ] = trpt->bup.oval;
 		;
 		goto R999;
 
@@ -116,7 +116,7 @@
 
 	case 25: // STATE 12
 		;
-		now.shaved[ Index(now.sitting, 9) ] = trpt->bup.oval;
+		now.shaved[ Index(now.sitting, 5) ] = trpt->bup.oval;
 		;
 		goto R999;
 

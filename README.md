@@ -3,10 +3,15 @@ Prácticas para Validación y Verificación del Software. Apartado de Promela-Sp
 
 # Notas sobre la practica :
 Spin barber0.pml  -- porque se da timeout?
+
 Entregar un informe, enseñar el codigo, enseñar el comando de spin
+
 Lo que muestra pan, si es 0 errores se muestra que no hay errores porque tata
+
 Da error, "en la traza se puede ver que el cliente entra antes que el 2... blablabla"
+
 2 puntos de la asignatura
+
 Un .zip, con barber0 y barber1.pml y un pdf con el informe
 
 # Exercise A :
@@ -65,11 +70,7 @@ Para esto se debe de cumplir que en ningun instante de tiempo, las dos condicion
 Para verificar esto con Spin hemos de negar el predicado :
  - ![]!(Barber@sleeping && Customer@waiting)
 
-<<<<<<< HEAD
-````
-=======
 ```` c++
->>>>>>> 18b0ed7eaaa8b078add7cf4dbd6172b31fec3ad0
 $ spin -t -p barber.pml
 
 ...
@@ -253,20 +254,151 @@ Desarrollamos las formulas para comprobar las propiedades :
  3. []<>Customer[1]@attended
     - ![]<>`(Customer[1]@attended)`
 
-Observamos que realizando la comprobacion de la propiedad 1 la evaluacion infinita ofrecida por pan nos indica que esta se cumple para cualquier instante.
+Observamos que realizando la comprobacion de la propiedad 1 la evaluacion infinita ofrecida por pan nos indica que esta no se cumple para cualquier instante. Ya que al efectuar la busqueda en cualquier instante de tiempo ya que spin encuentra un error.
 ``` c++
 $ spin -a -f '![]<>(Barber@working)' barber1.pml
 $ gcc -o pan pan.c
+$ ./pan -m200000
+warning: never claim + accept labels requires -a flag to fully verify
+warning: for p.o. reduction to be valid the never claim must be stutter-invariant
+(never claims generated from LTL formulae are stutter-invariant)
+Depth=     383 States=    1e+06 Transitions= 2.82e+06 Memory=   207.529 t=     2.23 R=   4e+05
+Depth=   34881 States=    2e+06 Transitions= 5.45e+06 Memory=   276.181 t=      4.5 R=   4e+05
+Depth=   86453 States=    3e+06 Transitions= 8.03e+06 Memory=   344.834 t=      6.7 R=   4e+05
+Depth=  137961 States=    4e+06 Transitions= 1.06e+07 Memory=   413.486 t=     8.91 R=   4e+05
+Depth=  194599 States=    5e+06 Transitions= 1.34e+07 Memory=   482.236 t=     11.5 R=   4e+05
+error: max search depth too small
+Depth=  199999 States=    6e+06 Transitions= 1.88e+07 Memory=   550.888 t=     15.8 R=   4e+05
+Depth=  199999 States=    7e+06 Transitions= 2.45e+07 Memory=   619.541 t=     20.2 R=   3e+05
+Depth=  199999 States=    8e+06 Transitions= 2.92e+07 Memory=   688.193 t=     24.2 R=   3e+05
+Depth=  199999 States=    9e+06 Transitions= 3.47e+07 Memory=   756.943 t=     28.8 R=   3e+05
+^CInterrupted
+
+(Spin Version 6.5.2 -- 6 December 2019)
+Warning: Search not completed
+        + Partial Order Reduction
+
+Full statespace search for:
+        never claim             + (never_0)
+        assertion violations    + (if within scope of claim)
+        acceptance   cycles     - (not selected)
+        invalid end states      - (disabled by never claim)
+
+State-vector 108 byte, depth reached 199999, errors: 0
+  9171683 states, stored
+ 26358870 states, matched
+ 35530553 transitions (= stored+matched)
+        0 atomic steps
+hash conflicts:   3906523 (resolved)
+
+Stats on memory usage (in Megabytes):
+ 1189.565       equivalent memory usage for states (stored*(State-vector + overhead))
+  630.169       actual memory usage for states (compression: 52.97%)
+                state-vector as stored = 44 byte + 28 byte overhead
+  128.000       memory used for hash table (-w24)
+   10.681       memory used for DFS stack (-m200000)
+  768.662       total actual memory usage
+
+
+
+pan: elapsed time 29.6 seconds
+pan: rate 309854.16 states/second
+
+
 $ ./pan -a
+
+warning: for p.o. reduction to be valid the never claim must be stutter-invariant
+(never claims generated from LTL formulae are stutter-invariant)
+pan:1: acceptance cycle (at depth 76)
+pan: wrote barber1.pml.trail
+
+(Spin Version 6.5.2 -- 6 December 2019)
+Warning: Search not completed
+        + Partial Order Reduction
+
+Full statespace search for:
+        never claim             + (never_0)
+        assertion violations    + (if within scope of claim)
+        acceptance   cycles     + (fairness disabled)
+        invalid end states      - (disabled by never claim)
+
+State-vector 108 byte, depth reached 85, errors: 1
+       43 states, stored
+        0 states, matched
+       43 transitions (= stored+matched)
+        0 atomic steps
+hash conflicts:         0 (resolved)
+
+Stats on memory usage (in Megabytes):
+    0.006       equivalent memory usage for states (stored*(State-vector + overhead))
+    0.286       actual memory usage for states
+  128.000       memory used for hash table (-w24)
+    0.534       memory used for DFS stack (-m10000)
+  128.730       total actual memory usage
+
+
+
+pan: elapsed time 0 seconds
 ```
-En el caso de la segunda propiedad, tambien vemos que Spin encuentra un ciclo de aceptacion :
+En la siguiente traza podemos encontrar el ciclo.
+``` c++
+$ spin -p -t barber1.pml
+...
+...
+72:    proc  5 (Customer:1) barber1.pml:62 (state 10)  [printf('%d Waiting room\\n',_pid)]
+ 74:    proc  5 (Customer:1) barber1.pml:25 (state 11)  [customers = (customers+1)]
+ 76:    proc  5 (Customer:1) barber1.pml:35 (state 13)  [mutex = 1]
+  <<<<<START OF CYCLE>>>>>
+ 78:    proc  4 (Customer:1) barber1.pml:30 (state 1)   [(mutex)]
+ 78:    proc  4 (Customer:1) barber1.pml:31 (state 2)   [mutex = 0]
+ 80:    proc  4 (Customer:1) barber1.pml:68 (state 20)  [((freeseats==0))]
+                          4 Skipped, no room
+ 82:    proc  4 (Customer:1) barber1.pml:69 (state 21)  [printf('%d Skipped, no room\\n',_pid)]
+ 84:    proc  4 (Customer:1) barber1.pml:35 (state 22)  [mutex = 1]
+ 86:    proc  4 (Customer:1) barber1.pml:71 (state 24)  [(1)]
+spin: trail ends after 86 steps
+#processes: 9
+                queue[0] = 8
+                queue[1] = 7
+                queue[2] = 6
+                queue[3] = 5
+                start = 0
+                end = 0
+                customers = 4
+                sitting = 0
+                shaved[0] = 0
+                shaved[1] = 0
+                shaved[2] = 0
+                shaved[3] = 0
+                shaved[4] = 0
+                shaved[5] = unattended
+                shaved[6] = unattended
+                shaved[7] = unattended
+                shaved[8] = unattended
+                freeseats = 0
+                mutex = 1
+                ready = 0
+ 86:    proc  8 (Customer:1) barber1.pml:66 (state 19)
+ 86:    proc  7 (Customer:1) barber1.pml:28 (state 18)
+ 86:    proc  6 (Customer:1) barber1.pml:28 (state 18)
+ 86:    proc  5 (Customer:1) barber1.pml:28 (state 18)
+ 86:    proc  4 (Customer:1) barber1.pml:54 (state 27)
+ 86:    proc  3 (Customer:1) barber1.pml:54 (state 27)
+ 86:    proc  2 (Customer:1) barber1.pml:54 (state 27)
+ 86:    proc  1 (Customer:1) barber1.pml:54 (state 27)
+ 86:    proc  0 (Barber:1) barber1.pml:18 (state 5)
+9 processes created
+```
+Podemos deducir que se produce un interbloqueo ya que el barbero se queda esperando a que cambie el semaforo de la variable de enteros pero como la sala de espera esta llena y no puede entrar ningun cliente, esta no se incrementa.
+
+En el caso de la segunda propiedad, tambien vemos que Spin encuentra tambien un error y su consecuente ciclo :
 ``` c++
 $ spin -a -f '![]((Customer@waiting) -> (<>(Customer@attended)))' barber1.pml
 $ gcc -o pan pan.c
 $ ./pan -a
 warning: for p.o. reduction to be valid the never claim must be stutter-invariant
 (never claims generated from LTL formulae are stutter-invariant)
-pan:1: acceptance cycle (at depth 70)
+pan:1: acceptance cycle (at depth 3426)
 pan: wrote barber1.pml.trail
 
 (Spin Version 6.5.2 -- 6 December 2019)
@@ -279,32 +411,82 @@ Full statespace search for:
         acceptance   cycles     + (fairness disabled)
         invalid end states      - (disabled by never claim)
 
-State-vector 68 byte, depth reached 79, errors: 1
-       40 states, stored
-        0 states, matched
-       40 transitions (= stored+matched)
+State-vector 108 byte, depth reached 3475, errors: 1
+     2026 states, stored
+      829 states, matched
+     2855 transitions (= stored+matched)
         0 atomic steps
 hash conflicts:         0 (resolved)
 
 Stats on memory usage (in Megabytes):
-    0.004       equivalent memory usage for states (stored*(State-vector + overhead))
-    0.285       actual memory usage for states
+    0.263       equivalent memory usage for states (stored*(State-vector + overhead))
+    0.383       actual memory usage for states
   128.000       memory used for hash table (-w24)
     0.534       memory used for DFS stack (-m10000)
-  128.730       total actual memory usage
+  128.827       total actual memory usage
 
 
 
-pan: elapsed time 0.01 seconds
+pan: elapsed time 0.02 seconds
+pan: rate    101300 states/second
 ```
-Para la tercera propiedad, observamos que tambien se cumple para cualquier instante tal y como nos muestra Spin :
+En la traza se ve el ciclo :
+``` c++
+$ spin -p -t barber1.pml
+...
+...
+3422:   proc  1 (Customer:1) barber1.pml:62 (state 10)  [printf('%d Waiting room\\n',_pid)]
+3424:   proc  1 (Customer:1) barber1.pml:25 (state 11)  [customers = (customers+1)]
+3426:   proc  1 (Customer:1) barber1.pml:35 (state 13)  [mutex = 1]
+  <<<<<START OF CYCLE>>>>>
+3428:   proc  5 (Customer:1) barber1.pml:30 (state 1)   [(mutex)]
+3428:   proc  5 (Customer:1) barber1.pml:31 (state 2)   [mutex = 0]
+3430:   proc  5 (Customer:1) barber1.pml:68 (state 20)  [((freeseats==0))]
+                              5 Skipped, no room
+3432:   proc  5 (Customer:1) barber1.pml:69 (state 21)  [printf('%d Skipped, no room\\n',_pid)]
+3434:   proc  5 (Customer:1) barber1.pml:35 (state 22)  [mutex = 1]
+3436:   proc  5 (Customer:1) barber1.pml:71 (state 24)  [(1)]
+spin: trail ends after 3436 steps
+#processes: 9
+                queue[0] = 8
+                queue[1] = 7
+                queue[2] = 1
+                queue[3] = 6
+                start = 3
+                end = 3
+                customers = 4
+                sitting = 4
+                shaved[0] = 0
+                shaved[1] = unattended
+                shaved[2] = done
+                shaved[3] = done
+                shaved[4] = done
+                shaved[5] = done
+                shaved[6] = unattended
+                shaved[7] = unattended
+                shaved[8] = unattended
+                freeseats = 0
+                mutex = 1
+                ready = 0
+3436:   proc  8 (Customer:1) barber1.pml:66 (state 19)
+3436:   proc  7 (Customer:1) barber1.pml:66 (state 19)
+3436:   proc  6 (Customer:1) barber1.pml:66 (state 19)
+3436:   proc  5 (Customer:1) barber1.pml:54 (state 27)
+3436:   proc  4 (Customer:1) barber1.pml:54 (state 27)
+3436:   proc  3 (Customer:1) barber1.pml:28 (state 18)
+3436:   proc  2 (Customer:1) barber1.pml:28 (state 18)
+3436:   proc  1 (Customer:1) barber1.pml:28 (state 18)
+3436:   proc  0 (Barber:1) barber1.pml:18 (state 5)
+9 processes created
+```
+Para la tercera propiedad, observamos que tambietampocon se cumple para cualquier instante tal y como nos muestra Spin :
 ``` c++
 $ spin -a -f '![](<>(Customer[1]@attended))' barber1.pml
 $ gcc -o pan pan.c
 $ ./pan -a
 warning: for p.o. reduction to be valid the never claim must be stutter-invariant
 (never claims generated from LTL formulae are stutter-invariant)
-pan:1: acceptance cycle (at depth 70)
+pan:1: acceptance cycle (at depth 76)
 pan: wrote barber1.pml.trail
 
 (Spin Version 6.5.2 -- 6 December 2019)
@@ -317,24 +499,158 @@ Full statespace search for:
         acceptance   cycles     + (fairness disabled)
         invalid end states      - (disabled by never claim)
 
-State-vector 68 byte, depth reached 79, errors: 1
-       40 states, stored
+State-vector 108 byte, depth reached 85, errors: 1
+       43 states, stored
         0 states, matched
-       40 transitions (= stored+matched)
+       43 transitions (= stored+matched)
         0 atomic steps
 hash conflicts:         0 (resolved)
 
 Stats on memory usage (in Megabytes):
-    0.004       equivalent memory usage for states (stored*(State-vector + overhead))
-    0.285       actual memory usage for states
+    0.006       equivalent memory usage for states (stored*(State-vector + overhead))
+    0.286       actual memory usage for states
   128.000       memory used for hash table (-w24)
     0.534       memory used for DFS stack (-m10000)
   128.730       total actual memory usage
 
 
 
-pan: elapsed time 0.01 seconds
+pan: elapsed time 0.02 seconds
+pan: rate      2150 states/second
 ```
+Con su consecuente traza :
+```c++
+$ spin -p -t barber1.pml
+...
+...
+72:    proc  5 (Customer:1) barber1.pml:62 (state 10)  [printf('%d Waiting room\\n',_pid)]
+ 74:    proc  5 (Customer:1) barber1.pml:25 (state 11)  [customers = (customers+1)]
+ 76:    proc  5 (Customer:1) barber1.pml:35 (state 13)  [mutex = 1]
+  <<<<<START OF CYCLE>>>>>
+ 78:    proc  4 (Customer:1) barber1.pml:30 (state 1)   [(mutex)]
+ 78:    proc  4 (Customer:1) barber1.pml:31 (state 2)   [mutex = 0]
+ 80:    proc  4 (Customer:1) barber1.pml:68 (state 20)  [((freeseats==0))]
+                          4 Skipped, no room
+ 82:    proc  4 (Customer:1) barber1.pml:69 (state 21)  [printf('%d Skipped, no room\\n',_pid)]
+ 84:    proc  4 (Customer:1) barber1.pml:35 (state 22)  [mutex = 1]
+ 86:    proc  4 (Customer:1) barber1.pml:71 (state 24)  [(1)]
+spin: trail ends after 86 steps
+#processes: 9
+                queue[0] = 8
+                queue[1] = 7
+                queue[2] = 6
+                queue[3] = 5
+                start = 0
+                end = 0
+                customers = 4
+                sitting = 0
+                shaved[0] = 0
+                shaved[1] = 0
+                shaved[2] = 0
+                shaved[3] = 0
+                shaved[4] = 0
+                shaved[5] = unattended
+                shaved[6] = unattended
+                shaved[7] = unattended
+                shaved[8] = unattended
+                freeseats = 0
+                mutex = 1
+                ready = 0
+ 86:    proc  8 (Customer:1) barber1.pml:66 (state 19)
+ 86:    proc  7 (Customer:1) barber1.pml:28 (state 18)
+ 86:    proc  6 (Customer:1) barber1.pml:28 (state 18)
+ 86:    proc  5 (Customer:1) barber1.pml:28 (state 18)
+ 86:    proc  4 (Customer:1) barber1.pml:54 (state 27)
+ 86:    proc  3 (Customer:1) barber1.pml:54 (state 27)
+ 86:    proc  2 (Customer:1) barber1.pml:54 (state 27)
+ 86:    proc  1 (Customer:1) barber1.pml:54 (state 27)
+ 86:    proc  0 (Barber:1) barber1.pml:18 (state 5)
+9 processes created
+```
+
+En el caso de que cambiemos a `C`<`N` lo principal que apreciamos es que tarda muchos pasos mas en encontrar el error y ademas el ciclo contiene una cantidad de pasos inmensamente mas grande que a si `N`>`C`. Pasando de 76 a 426 pasos para encontrar el ciclo y de  a 1006 para definir el ciclo:
+``` c++
+$ ./pan -a
+warning: for p.o. reduction to be valid the never claim must be stutter-invariant
+(never claims generated from LTL formulae are stutter-invariant)
+pan:1: acceptance cycle (at depth 426)
+pan: wrote barber1.pml.trail
+
+(Spin Version 6.5.2 -- 6 December 2019)
+Warning: Search not completed
+        + Partial Order Reduction
+
+Full statespace search for:
+        never claim             + (never_0)
+        assertion violations    + (if within scope of claim)
+        acceptance   cycles     + (fairness disabled)
+        invalid end states      - (disabled by never claim)
+
+State-vector 76 byte, depth reached 1433, errors: 1
+      717 states, stored
+        0 states, matched
+      717 transitions (= stored+matched)
+        0 atomic steps
+hash conflicts:         0 (resolved)
+
+Stats on memory usage (in Megabytes):
+    0.071       equivalent memory usage for states (stored*(State-vector + overhead))
+    0.286       actual memory usage for states
+  128.000       memory used for hash table (-w24)
+    0.534       memory used for DFS stack (-m10000)
+  128.730       total actual memory usage
+
+
+
+pan: elapsed time 0.02 seconds
+pan: rate     35850 states/second
+```
+``` c++
+$ ./pan -a
+...
+...
+426:    proc  3 (Customer:1) barber1.pml:60 (state 8)   [queue[end] = _pid]
+  <<<<<START OF CYCLE>>>>>
+428:    proc  3 (Customer:1) barber1.pml:61 (state 9)   [end = ((end+1)%8)]
+                      3 Waiting room
+430:    proc  3 (Customer:1) barber1.pml:62 (state 10)  [printf('%d Waiting room\\n',_pid)]
+432:    proc  3 (Customer:1) barber1.pml:25 (state 11)  [customers = (customers+1)]
+...
+...
+...
+1430:   proc  3 (Customer:1) barber1.pml:58 (state 6)   [freeseats = (freeseats-1)]
+1432:   proc  3 (Customer:1) barber1.pml:59 (state 7)   [shaved[_pid] = unattended]
+1434:   proc  3 (Customer:1) barber1.pml:60 (state 8)   [queue[end] = _pid]
+spin: trail ends after 1434 steps
+#processes: 5
+                queue[0] = 3
+                queue[1] = 2
+                queue[2] = 4
+                queue[3] = 3
+                queue[4] = 4
+                queue[5] = 3
+                queue[6] = 2
+                queue[7] = 4
+                start = 1
+                end = 3
+                customers = 2
+                sitting = 3
+                shaved[0] = 0
+                shaved[1] = done
+                shaved[2] = unattended
+                shaved[3] = unattended
+                shaved[4] = unattended
+                freeseats = 5
+                mutex = 0
+                ready = 0
+1434:   proc  4 (Customer:1) barber1.pml:66 (state 19)
+1434:   proc  3 (Customer:1) barber1.pml:61 (state 9)
+1434:   proc  2 (Customer:1) barber1.pml:66 (state 19)
+1434:   proc  1 (Customer:1) barber1.pml:28 (state 18)
+1434:   proc  0 (Barber:1) barber1.pml:18 (state 5)
+5 processes created
+```
+
 ## TODO
  - Naive approach:
    - Pasa para cualquier N>=0 sitios en la sala de espera?
